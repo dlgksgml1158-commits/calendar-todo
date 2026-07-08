@@ -1,6 +1,6 @@
 {
-  "name": "달력 할 일",
-  "short_name": "달력할일",
+  "name": "스케쥴표",
+  "short_name": "스케쥴표",
   "description": "달력처럼 생긴 할 일 리스트 앱",
   "start_url": "./index.html",
   "scope": "./",
