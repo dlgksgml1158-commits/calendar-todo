@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>달력 할 일</title>
+<meta name="theme-color" content="#4f46e5" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="달력 할 일" />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="icons/icon-192.png" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="layout">
+  <div class="app">
+    <header class="calendar-header">
+      <div class="nav">
+        <button id="prevMonth" class="nav-btn" aria-label="이전 달">◀</button>
+        <h1 id="monthLabel" class="month-label">2026년 7월</h1>
+        <button id="nextMonth" class="nav-btn" aria-label="다음 달">▶</button>
+      </div>
+    </header>
+
+    <div class="weekday-row">
+      <span class="wd sun">일</span>
+      <span class="wd">월</span>
+      <span class="wd">화</span>
+      <span class="wd">수</span>
+      <span class="wd">목</span>
+      <span class="wd">금</span>
+      <span class="wd sat">토</span>
+    </div>
+
+    <div class="calendar-grid" id="calendarGrid"></div>
+  </div>
+
+  <section class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panelDate">
+    <div class="panel-handle"></div>
+    <div class="panel-header">
+      <h2 id="panelDate">날짜</h2>
+      <button id="closePanel" class="close-btn" aria-label="닫기">✕</button>
+    </div>
+
+    <div class="add-form">
+      <input type="text" id="todoInput" placeholder="할 일을 입력하세요" maxlength="200" />
+      <div class="add-form-row">
+        <select id="repeatSelect" aria-label="반복 설정">
+          <option value="none">안 함</option>
+          <option value="daily">매일</option>
+          <option value="weekly">매주</option>
+          <option value="monthly">매월</option>
+        </select>
+        <button type="button" id="addBtn">추가</button>
+      </div>
+    </div>
+
+    <ul id="todoList" class="todo-list"></ul>
+    <p id="emptyMsg" class="empty-msg" hidden>이 날짜에 등록된 할 일이 없어요</p>
+  </section>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
