@@ -492,7 +492,7 @@ body.no-scroll {
 .time-label {
   font-size: 0.74rem;
   font-weight: 700;
-  color: var(--color-indigo);
+  color: var(--color-text-muted);
   white-space: nowrap;
 }
 
@@ -517,15 +517,15 @@ body.no-scroll {
 }
 
 .todo-item.just-added {
-  background: var(--color-indigo-light);
+  background: var(--color-border);
 }
 
 .todo-item .check {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  border: 2px solid var(--color-indigo);
-  background: transparent;
+  border: none;
+  background: var(--color-border);
   cursor: pointer;
   flex-shrink: 0;
   appearance: none;

@@ -1,4 +1,4 @@
-var CACHE_NAME = "calendar-todo-v21";
+var CACHE_NAME = "calendar-todo-v22";
 var ASSETS = [
   "./",
   "./index.html",
