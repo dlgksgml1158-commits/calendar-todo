@@ -130,6 +130,16 @@
     return Math.min(s[2], lastDayOfDateMonth);
   }
 
+  function formatTime12h(hhmm) {
+    var parts = hhmm.split(":").map(Number);
+    var h = parts[0];
+    var m = parts[1];
+    var period = h < 12 ? "오전" : "오후";
+    var h12 = h % 12;
+    if (h12 === 0) h12 = 12;
+    return period + " " + h12 + ":" + pad(m);
+  }
+
   function todoOccursOn(todo, dateStr) {
     if (dateStr < todo.date) return false;
     switch (todo.repeat) {
@@ -151,9 +161,17 @@
   }
 
   function todosForDate(dateStr) {
-    return state.todos.filter(function (t) {
-      return todoOccursOn(t, dateStr);
-    });
+    return state.todos
+      .filter(function (t) {
+        return todoOccursOn(t, dateStr);
+      })
+      .slice()
+      .sort(function (a, b) {
+        if (!a.time && !b.time) return 0;
+        if (!a.time) return -1;
+        if (!b.time) return 1;
+        return a.time < b.time ? -1 : a.time > b.time ? 1 : 0;
+      });
   }
 
   // ---------- DOM refs ----------
@@ -168,18 +186,42 @@
   var closePanelBtn = document.getElementById("closePanel");
   var addBtn = document.getElementById("addBtn");
   var todoInput = document.getElementById("todoInput");
-  var repeatChips = document.querySelectorAll(".chip");
+  var timeInput = document.getElementById("timeInput");
+  var repeatSelectWrap = document.getElementById("repeatSelectWrap");
+  var repeatDropdownBtn = document.getElementById("repeatDropdownBtn");
+  var repeatDropdownLabel = document.getElementById("repeatDropdownLabel");
+  var repeatMenu = document.getElementById("repeatMenu");
+  var repeatMenuItems = document.querySelectorAll(".repeat-menu-item");
   var selectedRepeat = "none";
   var todoList = document.getElementById("todoList");
   var emptyMsg = document.getElementById("emptyMsg");
 
-  repeatChips.forEach(function (chip) {
-    chip.addEventListener("click", function () {
-      selectedRepeat = chip.dataset.value;
-      repeatChips.forEach(function (c) {
-        c.classList.toggle("active", c === chip);
+  function closeRepeatMenu() {
+    repeatMenu.hidden = true;
+    repeatDropdownBtn.setAttribute("aria-expanded", "false");
+  }
+
+  repeatDropdownBtn.addEventListener("click", function () {
+    var willOpen = repeatMenu.hidden;
+    repeatMenu.hidden = !willOpen;
+    repeatDropdownBtn.setAttribute("aria-expanded", willOpen ? "true" : "false");
+  });
+
+  repeatMenuItems.forEach(function (item) {
+    item.addEventListener("click", function () {
+      selectedRepeat = item.dataset.value;
+      repeatDropdownLabel.textContent = item.textContent;
+      repeatMenuItems.forEach(function (i) {
+        i.classList.toggle("active", i === item);
       });
+      closeRepeatMenu();
     });
+  });
+
+  document.addEventListener("click", function (e) {
+    if (!repeatMenu.hidden && !repeatSelectWrap.contains(e.target)) {
+      closeRepeatMenu();
+    }
   });
 
   // ---------- calendar rendering ----------
@@ -256,7 +298,7 @@
         var key = t.id + "__" + dateStr;
         var chip = document.createElement("div");
         chip.className = "event-chip" + (state.completions[key] ? " event-done" : "");
-        chip.textContent = t.text;
+        chip.textContent = (t.time ? t.time + " " : "") + t.text;
         eventsWrap.appendChild(chip);
       });
 
@@ -281,10 +323,13 @@
   // ---------- panel ----------
   function resetAddFields() {
     todoInput.value = "";
+    timeInput.value = "";
     selectedRepeat = "none";
-    repeatChips.forEach(function (c) {
-      c.classList.toggle("active", c.dataset.value === "none");
+    repeatMenuItems.forEach(function (i) {
+      i.classList.toggle("active", i.dataset.value === "none");
     });
+    repeatDropdownLabel.textContent = "오늘";
+    closeRepeatMenu();
   }
 
   function openPanel(dateStr) {
@@ -327,6 +372,13 @@
         toggleCompletion(key);
       });
       li.appendChild(check);
+
+      if (t.time) {
+        var timeLabel = document.createElement("span");
+        timeLabel.className = "time-label";
+        timeLabel.textContent = formatTime12h(t.time);
+        li.appendChild(timeLabel);
+      }
 
       var text = document.createElement("span");
       text.className = "text";
@@ -403,6 +455,7 @@
       text: text,
       date: state.selectedDate,
       repeat: selectedRepeat,
+      time: timeInput.value || null,
     });
     save();
     resetAddFields();

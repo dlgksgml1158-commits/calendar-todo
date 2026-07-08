@@ -382,13 +382,20 @@ body.no-scroll {
   transform: scale(0.9);
 }
 
-.repeat-chips {
+.meta-row {
   display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
 }
 
-.chip {
+.repeat-select {
+  position: relative;
+}
+
+.repeat-dropdown-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   border: 1.5px solid var(--color-border);
   background: none;
   color: var(--color-text-muted);
@@ -397,13 +404,77 @@ body.no-scroll {
   padding: 6px 13px;
   border-radius: 999px;
   cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  transition: border-color 0.15s ease, color 0.15s ease;
 }
 
-.chip.active {
-  background: var(--color-indigo-light);
-  border-color: var(--color-indigo-light);
+.repeat-dropdown-btn[aria-expanded="true"] {
+  border-color: var(--color-indigo);
   color: var(--color-indigo);
+}
+
+.repeat-dropdown-btn .caret {
+  font-size: 0.65rem;
+  line-height: 1;
+}
+
+.repeat-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 100px;
+  z-index: 5;
+}
+
+.repeat-menu[hidden] {
+  display: none;
+}
+
+.repeat-menu-item {
+  border: none;
+  background: none;
+  color: var(--color-text);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+}
+
+.repeat-menu-item.active {
+  background: var(--color-indigo-light);
+  color: var(--color-indigo);
+}
+
+.time-input {
+  border: 1.5px solid var(--color-border);
+  background: none;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.time-input:focus {
+  outline: none;
+  border-color: var(--color-indigo);
+  color: var(--color-indigo);
+}
+
+.time-label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--color-indigo);
+  white-space: nowrap;
 }
 
 /* Todo list */
