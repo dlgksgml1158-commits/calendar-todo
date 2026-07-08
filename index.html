@@ -42,19 +42,21 @@
     <div class="panel-handle"></div>
     <div class="panel-header">
       <h2 id="panelDate">날짜</h2>
-      <button id="closePanel" class="close-btn" aria-label="닫기">✕</button>
     </div>
 
     <div class="add-form">
-      <input type="text" id="todoInput" placeholder="할 일을 입력하세요" maxlength="200" />
-      <div class="add-form-row">
-        <select id="repeatSelect" aria-label="반복 설정">
-          <option value="none">안 함</option>
-          <option value="daily">매일</option>
-          <option value="weekday">평일</option>
-          <option value="weekly">매주</option>
-        </select>
-        <button type="button" id="addBtn">추가</button>
+      <button type="button" id="addToggleBtn" class="add-toggle-btn" aria-label="할 일 추가" aria-expanded="false">+</button>
+      <div class="add-form-fields" id="addFormFields">
+        <input type="text" id="todoInput" placeholder="할 일" maxlength="200" />
+        <div class="add-form-row">
+          <select id="repeatSelect" aria-label="반복 설정">
+            <option value="none">안 함</option>
+            <option value="daily">매일</option>
+            <option value="weekday">평일</option>
+            <option value="weekly">매주</option>
+          </select>
+          <button type="button" id="addBtn">추가</button>
+        </div>
       </div>
     </div>
 

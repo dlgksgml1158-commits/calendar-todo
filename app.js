@@ -165,7 +165,8 @@
   var overlay = document.getElementById("overlay");
   var panel = document.getElementById("panel");
   var panelDate = document.getElementById("panelDate");
-  var closePanelBtn = document.getElementById("closePanel");
+  var addToggleBtn = document.getElementById("addToggleBtn");
+  var addFormFields = document.getElementById("addFormFields");
   var addBtn = document.getElementById("addBtn");
   var todoInput = document.getElementById("todoInput");
   var repeatSelect = document.getElementById("repeatSelect");
@@ -276,12 +277,26 @@
     return desktopQuery.matches;
   }
 
+  function collapseAddForm() {
+    addFormFields.classList.remove("expanded");
+    addToggleBtn.classList.remove("active");
+    addToggleBtn.setAttribute("aria-expanded", "false");
+    todoInput.value = "";
+    repeatSelect.value = "none";
+  }
+
+  function expandAddForm() {
+    addFormFields.classList.add("expanded");
+    addToggleBtn.classList.add("active");
+    addToggleBtn.setAttribute("aria-expanded", "true");
+    todoInput.focus();
+  }
+
   function openPanel(dateStr) {
     state.selectedDate = dateStr;
     var d = parseYMD(dateStr);
     panelDate.textContent = (d.getMonth() + 1) + "월 " + d.getDate() + "일 (" + WEEKDAY_NAMES[d.getDay()] + ")";
-    todoInput.value = "";
-    repeatSelect.value = "none";
+    collapseAddForm();
     renderTodoList();
     panel.classList.add("open");
     layout.classList.add("panel-open");
@@ -307,6 +322,21 @@
       overlay.classList.add("open");
       document.body.classList.add("no-scroll");
     }
+  });
+
+  addToggleBtn.addEventListener("click", function () {
+    if (!addFormFields.classList.contains("expanded")) {
+      expandAddForm();
+    } else {
+      collapseAddForm();
+    }
+  });
+
+  document.addEventListener("click", function (e) {
+    if (!panel.classList.contains("open")) return;
+    if (panel.contains(e.target)) return;
+    if (e.target.closest(".cell")) return;
+    closePanel();
   });
 
   function renderTodoList(highlightId) {
@@ -410,10 +440,8 @@
       repeat: repeatSelect.value,
     });
     save();
-    todoInput.value = "";
-    repeatSelect.value = "none";
+    collapseAddForm();
     renderTodoList(id);
-    todoInput.focus();
   }
 
   addBtn.addEventListener("click", addTodo);
@@ -424,7 +452,6 @@
     }
   });
 
-  closePanelBtn.addEventListener("click", closePanel);
   overlay.addEventListener("click", closePanel);
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && panel.classList.contains("open")) closePanel();
