@@ -470,6 +470,8 @@ body.no-scroll {
     align-items: flex-start;
     gap: 20px;
     padding: 0 12px;
+    /* height of .calendar-header + .weekday-row (incl. their margins), so the panel card lines up with the calendar grid card instead of the nav row above it */
+    --panel-align-offset: 84px;
   }
 
   .app {
@@ -481,7 +483,7 @@ body.no-scroll {
 
   .panel {
     position: sticky;
-    top: max(16px, env(safe-area-inset-top));
+    top: calc(max(16px, env(safe-area-inset-top)) + var(--panel-align-offset));
     left: auto;
     right: auto;
     bottom: auto;
@@ -491,9 +493,9 @@ body.no-scroll {
     flex: 0 0 340px;
     width: 340px;
     max-width: 340px;
-    max-height: calc(100vh - 32px);
+    max-height: calc(100vh - 32px - var(--panel-align-offset));
     border-radius: 20px;
-    margin-top: max(16px, env(safe-area-inset-top));
+    margin-top: calc(max(16px, env(safe-area-inset-top)) + var(--panel-align-offset));
     transition: none;
   }
 
