@@ -140,6 +140,12 @@
     return period + " " + h12 + ":" + pad(m);
   }
 
+  function to24Hour(period, hour12, minute) {
+    var h = parseInt(hour12, 10) % 12;
+    if (period === "PM") h += 12;
+    return pad(h) + ":" + minute;
+  }
+
   function todoOccursOn(todo, dateStr) {
     if (dateStr < todo.date) return false;
     switch (todo.repeat) {
@@ -186,7 +192,9 @@
   var closePanelBtn = document.getElementById("closePanel");
   var addBtn = document.getElementById("addBtn");
   var todoInput = document.getElementById("todoInput");
-  var timeInput = document.getElementById("timeInput");
+  var periodSelect = document.getElementById("periodSelect");
+  var hourSelect = document.getElementById("hourSelect");
+  var minuteSelect = document.getElementById("minuteSelect");
   var repeatSelectWrap = document.getElementById("repeatSelectWrap");
   var repeatDropdownBtn = document.getElementById("repeatDropdownBtn");
   var repeatDropdownLabel = document.getElementById("repeatDropdownLabel");
@@ -323,7 +331,9 @@
   // ---------- panel ----------
   function resetAddFields() {
     todoInput.value = "";
-    timeInput.value = "";
+    periodSelect.value = "AM";
+    hourSelect.value = "";
+    minuteSelect.value = "";
     selectedRepeat = "none";
     repeatMenuItems.forEach(function (i) {
       i.classList.toggle("active", i.dataset.value === "none");
@@ -450,12 +460,13 @@
     var text = todoInput.value.trim();
     if (!text || !state.selectedDate) return;
     var id = genId();
+    var hasTime = hourSelect.value && minuteSelect.value;
     state.todos.push({
       id: id,
       text: text,
       date: state.selectedDate,
       repeat: selectedRepeat,
-      time: timeInput.value || null,
+      time: hasTime ? to24Hour(periodSelect.value, hourSelect.value, minuteSelect.value) : null,
     });
     save();
     resetAddFields();

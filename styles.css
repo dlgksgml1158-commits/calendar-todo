@@ -453,21 +453,40 @@ body.no-scroll {
   color: var(--color-indigo);
 }
 
-.time-input {
+.time-select {
+  display: flex;
+  align-items: center;
+  gap: 3px;
   border: 1.5px solid var(--color-border);
-  background: none;
-  color: var(--color-text-muted);
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 5px 10px;
   border-radius: 999px;
-  cursor: pointer;
+  padding: 5px 10px;
+  color: var(--color-text-muted);
+  transition: border-color 0.15s ease, color 0.15s ease;
 }
 
-.time-input:focus {
-  outline: none;
+.time-select:focus-within {
   border-color: var(--color-indigo);
   color: var(--color-indigo);
+}
+
+.time-select select {
+  border: none;
+  background: none;
+  color: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.time-select select:focus {
+  outline: none;
+}
+
+.time-select .colon {
+  font-size: 0.78rem;
+  font-weight: 600;
 }
 
 .time-label {
