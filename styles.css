@@ -528,7 +528,6 @@ body.no-scroll {
 }
 
 .todo-item.done .text {
-  text-decoration: line-through;
   color: var(--color-text-muted);
 }
 
