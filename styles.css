@@ -411,19 +411,19 @@ body.no-scroll {
 
 .send-btn {
   flex-shrink: 0;
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   border: none;
-  background: var(--color-indigo-light);
+  background: none;
   color: var(--color-indigo);
-  font-size: 0.95rem;
+  font-size: 0.78rem;
   font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.12s ease, background 0.15s ease;
+  transition: transform 0.12s ease;
 }
 
 .send-btn:active {
