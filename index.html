@@ -15,57 +15,51 @@
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-<div class="layout">
-  <div class="app">
-    <header class="calendar-header">
-      <div class="nav">
-        <button id="prevMonth" class="nav-btn" aria-label="이전 달">◀</button>
-        <h1 id="monthLabel" class="month-label">2026년 7월</h1>
-        <button id="nextMonth" class="nav-btn" aria-label="다음 달">▶</button>
-      </div>
-    </header>
+<div class="app">
+  <header class="calendar-header">
+    <button id="prevMonth" class="nav-btn" aria-label="이전 달">‹</button>
+    <h1 id="monthLabel" class="month-label">2026년 7월</h1>
+    <button id="nextMonth" class="nav-btn" aria-label="다음 달">›</button>
+  </header>
 
-    <div class="weekday-row">
-      <span class="wd sun">일</span>
-      <span class="wd">월</span>
-      <span class="wd">화</span>
-      <span class="wd">수</span>
-      <span class="wd">목</span>
-      <span class="wd">금</span>
-      <span class="wd sat">토</span>
-    </div>
-
-    <div class="calendar-grid" id="calendarGrid"></div>
+  <div class="weekday-row">
+    <span class="wd sun">일</span>
+    <span class="wd">월</span>
+    <span class="wd">화</span>
+    <span class="wd">수</span>
+    <span class="wd">목</span>
+    <span class="wd">금</span>
+    <span class="wd sat">토</span>
   </div>
 
-  <section class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panelDate">
-    <div class="panel-handle"></div>
-    <div class="panel-header">
-      <h2 id="panelDate">날짜</h2>
-    </div>
-
-    <div class="add-form">
-      <button type="button" id="addToggleBtn" class="add-toggle-btn" aria-label="할 일 추가" aria-expanded="false">+</button>
-      <div class="add-form-fields" id="addFormFields">
-        <input type="text" id="todoInput" placeholder="할 일" maxlength="200" />
-        <div class="add-form-row">
-          <select id="repeatSelect" aria-label="반복 설정">
-            <option value="none">안 함</option>
-            <option value="daily">매일</option>
-            <option value="weekday">평일</option>
-            <option value="weekly">매주</option>
-          </select>
-          <button type="button" id="addBtn">추가</button>
-        </div>
-      </div>
-    </div>
-
-    <ul id="todoList" class="todo-list"></ul>
-    <p id="emptyMsg" class="empty-msg" hidden>이 날짜에 등록된 할 일이 없어요</p>
-  </section>
+  <div class="calendar-grid" id="calendarGrid"></div>
 </div>
 
 <div class="overlay" id="overlay"></div>
+
+<section class="modal" id="panel" role="dialog" aria-modal="true" aria-labelledby="panelDate">
+  <div class="modal-handle"></div>
+  <div class="modal-header">
+    <h2 id="panelDate">날짜</h2>
+    <button id="closePanel" class="modal-close" aria-label="닫기">✕</button>
+  </div>
+
+  <div class="add-row">
+    <input type="text" id="todoInput" placeholder="할 일을 입력하세요" maxlength="200" />
+    <div class="add-row-bottom">
+      <select id="repeatSelect" aria-label="반복 설정">
+        <option value="none">안 함</option>
+        <option value="daily">매일</option>
+        <option value="weekday">평일</option>
+        <option value="weekly">매주</option>
+      </select>
+      <button type="button" id="addBtn">추가</button>
+    </div>
+  </div>
+
+  <ul id="todoList" class="todo-list"></ul>
+  <p id="emptyMsg" class="empty-msg" hidden>이 날짜에 등록된 할 일이 없어요</p>
+</section>
 
 <script src="app.js"></script>
 </body>
