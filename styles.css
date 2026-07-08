@@ -512,40 +512,13 @@ body.no-scroll {
   gap: 10px;
   padding: 11px 12px;
   border-radius: var(--radius-md);
-  background: var(--color-surface-2);
+  background: color-mix(in srgb, var(--color-surface-2) 45%, transparent);
   transition: background-color 0.6s ease;
+  cursor: pointer;
 }
 
 .todo-item.just-added {
   background: var(--color-border);
-}
-
-.todo-item .check {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: none;
-  background: var(--color-border);
-  cursor: pointer;
-  flex-shrink: 0;
-  appearance: none;
-  -webkit-appearance: none;
-  position: relative;
-}
-
-.todo-item .check:checked {
-  background: var(--color-indigo);
-}
-
-.todo-item .check:checked::after {
-  content: "✓";
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 0.75rem;
 }
 
 .todo-item .text {

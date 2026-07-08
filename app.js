@@ -374,14 +374,9 @@
       li.className = "todo-item" + (done ? " done" : "");
       if (t.id === highlightId) highlightEl = li;
 
-      var check = document.createElement("input");
-      check.type = "checkbox";
-      check.className = "check";
-      check.checked = done;
-      check.addEventListener("change", function () {
+      li.addEventListener("click", function () {
         toggleCompletion(key);
       });
-      li.appendChild(check);
 
       if (t.time) {
         var timeLabel = document.createElement("span");
@@ -407,7 +402,8 @@
       delBtn.type = "button";
       delBtn.setAttribute("aria-label", "삭제");
       delBtn.textContent = "✕";
-      delBtn.addEventListener("click", function () {
+      delBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
         deleteTodo(t);
       });
       li.appendChild(delBtn);
@@ -460,13 +456,14 @@
     var text = todoInput.value.trim();
     if (!text || !state.selectedDate) return;
     var id = genId();
-    var hasTime = hourSelect.value && minuteSelect.value;
+    var hasTime = !!hourSelect.value;
+    var minuteVal = minuteSelect.value || "00";
     state.todos.push({
       id: id,
       text: text,
       date: state.selectedDate,
       repeat: selectedRepeat,
-      time: hasTime ? to24Hour(periodSelect.value, hourSelect.value, minuteSelect.value) : null,
+      time: hasTime ? to24Hour(periodSelect.value, hourSelect.value, minuteVal) : null,
     });
     save();
     resetAddFields();
