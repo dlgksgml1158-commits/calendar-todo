@@ -327,13 +327,62 @@ body.no-scroll {
 
 /* Add row */
 .add-row {
+  margin-bottom: 16px;
+}
+
+.add-toggle-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-border);
+  background: none;
+  color: var(--color-text-muted);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.add-toggle-btn:active {
+  transform: scale(0.9);
+}
+
+.add-toggle-btn.active {
+  border-color: var(--color-indigo);
+  color: var(--color-indigo);
+  transform: rotate(45deg);
+}
+
+.add-toggle-btn.active:active {
+  transform: rotate(45deg) scale(0.9);
+}
+
+.add-fields {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.25s ease, opacity 0.2s ease;
+}
+
+.add-fields.expanded {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  margin-top: 10px;
+}
+
+.add-fields-inner {
+  overflow: hidden;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-bottom: 18px;
 }
 
-.add-row input[type="text"] {
+.add-fields input[type="text"] {
   width: 100%;
   padding: 13px 16px;
   border-radius: var(--radius-md);
@@ -343,17 +392,17 @@ body.no-scroll {
   font-size: 0.95rem;
 }
 
-.add-row input[type="text"]:focus {
+.add-fields input[type="text"]:focus {
   outline: none;
   border-color: var(--color-indigo);
 }
 
-.add-row-bottom {
+.add-fields-bottom {
   display: flex;
   gap: 8px;
 }
 
-.add-row select {
+.add-fields select {
   flex: 1;
   padding: 10px 12px;
   border-radius: var(--radius-md);
@@ -363,7 +412,7 @@ body.no-scroll {
   font-size: 0.88rem;
 }
 
-.add-row button#addBtn {
+.add-fields button#addBtn {
   border: none;
   background: var(--color-indigo);
   color: #fff;
@@ -376,7 +425,7 @@ body.no-scroll {
   transition: transform 0.12s ease;
 }
 
-.add-row button#addBtn:active {
+.add-fields button#addBtn:active {
   transform: scale(0.96);
 }
 

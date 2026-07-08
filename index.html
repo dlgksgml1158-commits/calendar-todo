@@ -45,20 +45,25 @@
   </div>
 
   <div class="add-row">
-    <input type="text" id="todoInput" placeholder="할 일을 입력하세요" maxlength="200" />
-    <div class="add-row-bottom">
-      <select id="repeatSelect" aria-label="반복 설정">
-        <option value="none">안 함</option>
-        <option value="daily">매일</option>
-        <option value="weekday">평일</option>
-        <option value="weekly">매주</option>
-      </select>
-      <button type="button" id="addBtn">추가</button>
+    <button type="button" id="addToggleBtn" class="add-toggle-btn" aria-label="할 일 추가" aria-expanded="false">+</button>
+    <div class="add-fields" id="addFields">
+      <div class="add-fields-inner">
+        <input type="text" id="todoInput" placeholder="할 일을 입력하세요" maxlength="200" />
+        <div class="add-fields-bottom">
+          <select id="repeatSelect" aria-label="반복 설정">
+            <option value="none">안 함</option>
+            <option value="daily">매일</option>
+            <option value="weekday">평일</option>
+            <option value="weekly">매주</option>
+          </select>
+          <button type="button" id="addBtn">추가</button>
+        </div>
+      </div>
     </div>
   </div>
 
   <ul id="todoList" class="todo-list"></ul>
-  <p id="emptyMsg" class="empty-msg" hidden>이 날짜에 등록된 할 일이 없어요</p>
+  <p id="emptyMsg" class="empty-msg" hidden>이 날짜에 등록된 일정이 없어요</p>
 </section>
 
 <script src="app.js"></script>
