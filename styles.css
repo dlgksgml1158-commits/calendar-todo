@@ -61,7 +61,7 @@ body.no-scroll {
 }
 
 .app {
-  max-width: 620px;
+  max-width: 760px;
   margin: 0 auto;
   padding: max(20px, env(safe-area-inset-top)) 16px 32px;
 }
