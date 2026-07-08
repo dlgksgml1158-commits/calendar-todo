@@ -45,24 +45,19 @@
   </div>
 
   <div class="add-row">
-    <button type="button" id="addToggleBtn" class="add-toggle-btn" aria-label="할 일 추가" aria-expanded="false">+</button>
-    <div class="add-fields" id="addFields">
-      <div class="add-fields-inner">
-        <div class="quick-input">
-          <input type="text" id="todoInput" placeholder="" maxlength="200" />
-          <button type="button" id="addBtn" class="send-btn" aria-label="추가">⏎</button>
-        </div>
-        <div class="repeat-chips" id="repeatChips" role="radiogroup" aria-label="반복 설정">
-          <button type="button" class="chip active" data-value="none">오늘</button>
-          <button type="button" class="chip" data-value="weekday">평일</button>
-          <button type="button" class="chip" data-value="weekly">매주</button>
-        </div>
-      </div>
+    <div class="quick-input">
+      <input type="text" id="todoInput" placeholder="" maxlength="200" />
+      <button type="button" id="addBtn" class="send-btn" aria-label="추가">+</button>
+    </div>
+    <div class="repeat-chips" id="repeatChips" role="radiogroup" aria-label="반복 설정">
+      <button type="button" class="chip active" data-value="none">오늘</button>
+      <button type="button" class="chip" data-value="weekday">평일</button>
+      <button type="button" class="chip" data-value="weekly">매주</button>
     </div>
   </div>
 
   <ul id="todoList" class="todo-list"></ul>
-  <p id="emptyMsg" class="empty-msg" hidden>이 날짜에 등록된 일정이 없어요</p>
+  <p id="emptyMsg" class="empty-msg" hidden>오늘 등록된 일정이 없습니다.</p>
 </section>
 
 <script src="app.js"></script>

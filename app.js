@@ -166,8 +166,6 @@
   var panel = document.getElementById("panel");
   var panelDate = document.getElementById("panelDate");
   var closePanelBtn = document.getElementById("closePanel");
-  var addToggleBtn = document.getElementById("addToggleBtn");
-  var addFields = document.getElementById("addFields");
   var addBtn = document.getElementById("addBtn");
   var todoInput = document.getElementById("todoInput");
   var repeatChips = document.querySelectorAll(".chip");
@@ -281,10 +279,7 @@
   }
 
   // ---------- panel ----------
-  function collapseAddFields() {
-    addFields.classList.remove("expanded");
-    addToggleBtn.classList.remove("active");
-    addToggleBtn.setAttribute("aria-expanded", "false");
+  function resetAddFields() {
     todoInput.value = "";
     selectedRepeat = "none";
     repeatChips.forEach(function (c) {
@@ -292,26 +287,11 @@
     });
   }
 
-  function expandAddFields() {
-    addFields.classList.add("expanded");
-    addToggleBtn.classList.add("active");
-    addToggleBtn.setAttribute("aria-expanded", "true");
-    todoInput.focus();
-  }
-
-  addToggleBtn.addEventListener("click", function () {
-    if (addFields.classList.contains("expanded")) {
-      collapseAddFields();
-    } else {
-      expandAddFields();
-    }
-  });
-
   function openPanel(dateStr) {
     state.selectedDate = dateStr;
     var d = parseYMD(dateStr);
     panelDate.textContent = (d.getMonth() + 1) + "월 " + d.getDate() + "일 (" + WEEKDAY_NAMES[d.getDay()] + ")";
-    collapseAddFields();
+    resetAddFields();
     renderTodoList();
     overlay.classList.add("open");
     panel.classList.add("open");
@@ -425,8 +405,9 @@
       repeat: selectedRepeat,
     });
     save();
-    collapseAddFields();
+    resetAddFields();
     renderTodoList(id);
+    todoInput.focus();
   }
 
   addBtn.addEventListener("click", addTodo);
