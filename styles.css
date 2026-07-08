@@ -352,7 +352,6 @@ body.no-scroll {
 }
 
 .add-toggle-btn.active {
-  border-color: var(--color-indigo);
   color: var(--color-indigo);
   transform: rotate(45deg);
 }
@@ -416,9 +415,10 @@ body.no-scroll {
   height: 34px;
   border-radius: 50%;
   border: none;
-  background: var(--color-indigo);
-  color: #fff;
-  font-size: 0.9rem;
+  background: var(--color-indigo-light);
+  color: var(--color-indigo);
+  font-size: 0.95rem;
+  font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -449,9 +449,9 @@ body.no-scroll {
 }
 
 .chip.active {
-  background: var(--color-indigo);
-  border-color: var(--color-indigo);
-  color: #fff;
+  background: var(--color-indigo-light);
+  border-color: var(--color-indigo-light);
+  color: var(--color-indigo);
 }
 
 /* Todo list */
