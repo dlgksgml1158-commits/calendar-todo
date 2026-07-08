@@ -4,7 +4,66 @@
   var STORAGE_TODOS = "ctd_todos_v1";
   var STORAGE_COMPLETIONS = "ctd_completions_v1";
   var WEEKDAY_NAMES = ["일", "월", "화", "수", "목", "금", "토"];
-  var REPEAT_LABEL = { daily: "매일", weekly: "매주", monthly: "매월" };
+  var REPEAT_LABEL = { daily: "매일", weekday: "평일", weekly: "매주", monthly: "매월" };
+
+  // 대한민국 법정 공휴일 (대체공휴일 포함). 음력 기반 명절 날짜는 매년 바뀌므로
+  // 확인된 연도(2025년 하반기~2027년)만 하드코딩되어 있음.
+  var HOLIDAYS = {
+    "2025-06-06": "현충일",
+    "2025-08-15": "광복절",
+    "2025-10-03": "개천절",
+    "2025-10-05": "추석",
+    "2025-10-06": "추석",
+    "2025-10-07": "추석",
+    "2025-10-08": "대체공휴일",
+    "2025-10-09": "한글날",
+    "2025-12-25": "크리스마스",
+
+    "2026-01-01": "신정",
+    "2026-02-16": "설날",
+    "2026-02-17": "설날",
+    "2026-02-18": "설날",
+    "2026-03-01": "삼일절",
+    "2026-03-02": "대체공휴일",
+    "2026-05-05": "어린이날",
+    "2026-05-24": "부처님오신날",
+    "2026-05-25": "대체공휴일",
+    "2026-06-06": "현충일",
+    "2026-07-17": "제헌절",
+    "2026-08-15": "광복절",
+    "2026-08-17": "대체공휴일",
+    "2026-09-24": "추석",
+    "2026-09-25": "추석",
+    "2026-09-26": "추석",
+    "2026-10-03": "개천절",
+    "2026-10-05": "대체공휴일",
+    "2026-10-09": "한글날",
+    "2026-12-25": "크리스마스",
+
+    "2027-01-01": "신정",
+    "2027-02-06": "설날",
+    "2027-02-07": "설날",
+    "2027-02-08": "설날",
+    "2027-02-09": "대체공휴일",
+    "2027-03-01": "삼일절",
+    "2027-05-05": "어린이날",
+    "2027-05-13": "부처님오신날",
+    "2027-06-06": "현충일",
+    "2027-06-07": "대체공휴일",
+    "2027-07-17": "제헌절",
+    "2027-07-19": "대체공휴일",
+    "2027-08-15": "광복절",
+    "2027-08-16": "대체공휴일",
+    "2027-09-14": "추석",
+    "2027-09-15": "추석",
+    "2027-09-16": "추석",
+    "2027-10-03": "개천절",
+    "2027-10-04": "대체공휴일",
+    "2027-10-09": "한글날",
+    "2027-10-11": "대체공휴일",
+    "2027-12-25": "크리스마스",
+    "2027-12-27": "대체공휴일",
+  };
 
   var state = {
     todos: loadTodos(),
@@ -78,6 +137,9 @@
         return dateStr === todo.date;
       case "daily":
         return true;
+      case "weekday":
+        var wd = parseYMD(dateStr).getDay();
+        return wd !== 0 && wd !== 6;
       case "weekly":
         return daysBetween(todo.date, dateStr) % 7 === 0;
       case "monthly":
@@ -153,17 +215,27 @@
       var dateStr = formatDate(cellY, cellM0, cellD);
       var col = i % 7;
 
+      var holidayName = HOLIDAYS[dateStr];
+
       var cell = document.createElement("div");
       cell.className = "cell";
       if (otherMonth) cell.classList.add("other-month");
       if (dateStr === todayStr) cell.classList.add("today");
       if (col === 0) cell.classList.add("col-sun");
       if (col === 6) cell.classList.add("col-sat");
+      if (holidayName) cell.classList.add("holiday");
 
       var dayNum = document.createElement("div");
       dayNum.className = "day-num";
       dayNum.textContent = cellD;
       cell.appendChild(dayNum);
+
+      if (holidayName) {
+        var holidayLabel = document.createElement("div");
+        holidayLabel.className = "holiday-label";
+        holidayLabel.textContent = holidayName;
+        cell.appendChild(holidayLabel);
+      }
 
       var eventsWrap = document.createElement("div");
       eventsWrap.className = "cell-events";
@@ -197,6 +269,7 @@
   }
 
   // ---------- panel ----------
+  var layout = document.querySelector(".layout");
   var desktopQuery = window.matchMedia("(min-width: 860px)");
 
   function isDesktop() {
@@ -211,6 +284,7 @@
     repeatSelect.value = "none";
     renderTodoList();
     panel.classList.add("open");
+    layout.classList.add("panel-open");
     if (!isDesktop()) {
       overlay.classList.add("open");
       document.body.classList.add("no-scroll");
@@ -220,16 +294,18 @@
   function closePanel() {
     overlay.classList.remove("open");
     panel.classList.remove("open");
+    layout.classList.remove("panel-open");
     document.body.classList.remove("no-scroll");
   }
 
   desktopQuery.addEventListener("change", function (e) {
+    if (!panel.classList.contains("open")) return;
     if (e.matches) {
       overlay.classList.remove("open");
       document.body.classList.remove("no-scroll");
-      openPanel(state.selectedDate || formatDateObj(new Date()));
     } else {
-      closePanel();
+      overlay.classList.add("open");
+      document.body.classList.add("no-scroll");
     }
   });
 
@@ -373,10 +449,6 @@
   });
 
   renderCalendar();
-
-  if (isDesktop()) {
-    openPanel(formatDateObj(new Date()));
-  }
 
   // ---------- service worker (https / localhost only) ----------
   if (

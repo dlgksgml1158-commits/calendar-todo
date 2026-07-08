@@ -196,6 +196,23 @@ body.no-scroll {
   font-weight: 800;
 }
 
+.cell.holiday .day-num {
+  color: var(--color-rose);
+  font-weight: 800;
+}
+
+.holiday-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--color-rose);
+  text-align: center;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
 .cell-events {
   display: flex;
   flex-direction: column;
@@ -464,7 +481,9 @@ body.no-scroll {
 
 /* Desktop: centered modal */
 @media (min-width: 860px) {
-  .layout {
+  /* Side panel only appears once a date is actually clicked (.layout.panel-open).
+     Until then, .panel keeps its default (mobile) off-screen styles, so it stays hidden. */
+  .layout.panel-open {
     max-width: 980px;
     display: flex;
     align-items: flex-start;
@@ -474,14 +493,14 @@ body.no-scroll {
     --panel-align-offset: 84px;
   }
 
-  .app {
+  .layout.panel-open .app {
     flex: 1 1 600px;
     max-width: 600px;
     margin: 0;
     padding: max(16px, env(safe-area-inset-top)) 0 24px;
   }
 
-  .panel {
+  .layout.panel-open .panel {
     position: sticky;
     top: calc(max(16px, env(safe-area-inset-top)) + var(--panel-align-offset));
     left: auto;
@@ -499,15 +518,7 @@ body.no-scroll {
     transition: none;
   }
 
-  .panel-handle {
-    display: none;
-  }
-
-  .panel .close-btn {
-    display: none;
-  }
-
-  .overlay {
+  .layout.panel-open .panel-handle {
     display: none;
   }
 }
