@@ -334,7 +334,7 @@ body.no-scroll {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  border: 1.5px solid var(--color-border);
+  border: 1.5px solid transparent;
   background: none;
   color: var(--color-text-muted);
   font-size: 1.05rem;
@@ -379,54 +379,79 @@ body.no-scroll {
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
-.add-fields input[type="text"] {
-  width: 100%;
-  padding: 13px 16px;
-  border-radius: var(--radius-md);
-  border: 1.5px solid var(--color-border);
-  background: var(--color-surface-2);
-  color: var(--color-text);
-  font-size: 0.95rem;
+.quick-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1.5px solid var(--color-border);
+  padding-bottom: 8px;
+  transition: border-color 0.15s ease;
 }
 
-.add-fields input[type="text"]:focus {
-  outline: none;
+.quick-input:focus-within {
   border-color: var(--color-indigo);
 }
 
-.add-fields-bottom {
-  display: flex;
-  gap: 8px;
-}
-
-.add-fields select {
+.quick-input input[type="text"] {
   flex: 1;
-  padding: 10px 12px;
-  border-radius: var(--radius-md);
-  border: 1.5px solid var(--color-border);
-  background: var(--color-surface-2);
+  min-width: 0;
+  width: 100%;
+  padding: 6px 2px;
+  border: none;
+  background: none;
   color: var(--color-text);
-  font-size: 0.88rem;
+  font-size: 1rem;
 }
 
-.add-fields button#addBtn {
+.quick-input input[type="text"]:focus {
+  outline: none;
+}
+
+.send-btn {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
   border: none;
   background: var(--color-indigo);
   color: #fff;
-  font-weight: 700;
-  padding: 10px 20px;
-  border-radius: var(--radius-md);
   font-size: 0.9rem;
   cursor: pointer;
-  min-width: 76px;
-  transition: transform 0.12s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.12s ease, background 0.15s ease;
 }
 
-.add-fields button#addBtn:active {
-  transform: scale(0.96);
+.send-btn:active {
+  transform: scale(0.9);
+}
+
+.repeat-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  border: 1.5px solid var(--color-border);
+  background: none;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 6px 13px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.chip.active {
+  background: var(--color-indigo);
+  border-color: var(--color-indigo);
+  color: #fff;
 }
 
 /* Todo list */

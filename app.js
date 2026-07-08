@@ -170,9 +170,19 @@
   var addFields = document.getElementById("addFields");
   var addBtn = document.getElementById("addBtn");
   var todoInput = document.getElementById("todoInput");
-  var repeatSelect = document.getElementById("repeatSelect");
+  var repeatChips = document.querySelectorAll(".chip");
+  var selectedRepeat = "none";
   var todoList = document.getElementById("todoList");
   var emptyMsg = document.getElementById("emptyMsg");
+
+  repeatChips.forEach(function (chip) {
+    chip.addEventListener("click", function () {
+      selectedRepeat = chip.dataset.value;
+      repeatChips.forEach(function (c) {
+        c.classList.toggle("active", c === chip);
+      });
+    });
+  });
 
   // ---------- calendar rendering ----------
   function renderCalendar() {
@@ -276,7 +286,10 @@
     addToggleBtn.classList.remove("active");
     addToggleBtn.setAttribute("aria-expanded", "false");
     todoInput.value = "";
-    repeatSelect.value = "none";
+    selectedRepeat = "none";
+    repeatChips.forEach(function (c) {
+      c.classList.toggle("active", c.dataset.value === "none");
+    });
   }
 
   function expandAddFields() {
@@ -409,7 +422,7 @@
       id: id,
       text: text,
       date: state.selectedDate,
-      repeat: repeatSelect.value,
+      repeat: selectedRepeat,
     });
     save();
     collapseAddFields();
