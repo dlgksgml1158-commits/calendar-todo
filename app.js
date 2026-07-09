@@ -245,13 +245,17 @@
         e.stopPropagation();
         todo.color = opt.value || null;
         save();
+        closeColorPopover();
         renderTodoList();
         renderCalendar();
       });
       pop.appendChild(b);
     });
 
-    anchorEl.appendChild(pop);
+    document.body.appendChild(pop);
+    var rect = anchorEl.getBoundingClientRect();
+    pop.style.top = rect.top + rect.height / 2 + "px";
+    pop.style.right = window.innerWidth - rect.left + 5 + "px";
   }
 
   document.addEventListener("click", function (e) {
