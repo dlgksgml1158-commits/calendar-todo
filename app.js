@@ -229,10 +229,13 @@
     pop.className = "color-popover";
     pop.dataset.todoId = todo.id;
 
-    COLOR_OPTIONS.forEach(function (opt) {
+    var currentColor = todo.color || "";
+    COLOR_OPTIONS.filter(function (opt) {
+      return opt.value !== currentColor;
+    }).forEach(function (opt) {
       var b = document.createElement("button");
       b.type = "button";
-      b.className = "color-swatch" + ((todo.color || "") === opt.value ? " active" : "");
+      b.className = "color-swatch";
       b.dataset.color = opt.value;
       b.setAttribute("aria-label", opt.label);
       var swatchDot = document.createElement("span");

@@ -436,15 +436,24 @@ body.no-scroll {
 .color-popover {
   position: absolute;
   top: 50%;
-  left: calc(100% + 10px);
+  right: calc(100% + 5px);
   transform: translateY(-50%);
   display: flex;
   gap: 6px;
   background: var(--color-surface);
-  border-radius: 12px;
-  padding: 6px;
+  border-radius: 999px;
+  padding: 4px 7px;
   box-shadow: var(--shadow-md);
   z-index: 5;
+}
+
+.color-popover .color-swatch {
+  padding: 3px;
+}
+
+.color-popover .swatch-dot {
+  width: 9px;
+  height: 9px;
 }
 
 .repeat-select {
