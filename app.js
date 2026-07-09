@@ -431,15 +431,15 @@
       li.className = "todo-item";
       if (t.id === highlightId) highlightEl = li;
 
-      li.addEventListener("click", function (e) {
-        e.stopPropagation();
-        openColorPopover(t, li);
-      });
-
       var dot = document.createElement("span");
       dot.className = "todo-color-dot";
       dot.style.background = t.color && COLOR_VAR[t.color] ? COLOR_VAR[t.color] : "var(--color-indigo)";
       li.appendChild(dot);
+
+      li.addEventListener("click", function (e) {
+        e.stopPropagation();
+        openColorPopover(t, dot);
+      });
 
       if (t.time) {
         var timeLabel = document.createElement("span");

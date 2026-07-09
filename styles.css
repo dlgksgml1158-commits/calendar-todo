@@ -426,6 +426,7 @@ body.no-scroll {
 }
 
 .todo-color-dot {
+  position: relative;
   width: 9px;
   height: 9px;
   border-radius: 50%;
@@ -434,8 +435,9 @@ body.no-scroll {
 
 .color-popover {
   position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
+  top: 50%;
+  left: calc(100% + 10px);
+  transform: translateY(-50%);
   display: flex;
   gap: 6px;
   background: var(--color-surface);
