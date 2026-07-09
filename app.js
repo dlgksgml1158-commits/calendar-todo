@@ -214,9 +214,15 @@
     { value: "green", label: "초록" },
   ];
 
+  var hiddenDotEl = null;
+
   function closeColorPopover() {
     var existing = document.querySelector(".color-popover");
     if (existing) existing.remove();
+    if (hiddenDotEl) {
+      hiddenDotEl.style.visibility = "";
+      hiddenDotEl = null;
+    }
   }
 
   function openColorPopover(todo, anchorEl) {
@@ -230,12 +236,10 @@
     pop.dataset.todoId = todo.id;
 
     var currentColor = todo.color || "";
-    COLOR_OPTIONS.filter(function (opt) {
-      return opt.value !== currentColor;
-    }).forEach(function (opt) {
+    COLOR_OPTIONS.forEach(function (opt) {
       var b = document.createElement("button");
       b.type = "button";
-      b.className = "color-swatch";
+      b.className = "color-swatch" + (opt.value === currentColor ? " active" : "");
       b.dataset.color = opt.value;
       b.setAttribute("aria-label", opt.label);
       var swatchDot = document.createElement("span");
@@ -255,7 +259,10 @@
     document.body.appendChild(pop);
     var rect = anchorEl.getBoundingClientRect();
     pop.style.top = rect.top + rect.height / 2 + "px";
-    pop.style.right = window.innerWidth - rect.left + 5 + "px";
+    pop.style.right = window.innerWidth - rect.right + "px";
+
+    anchorEl.style.visibility = "hidden";
+    hiddenDotEl = anchorEl;
   }
 
   document.addEventListener("click", function (e) {
@@ -427,6 +434,7 @@
   }
 
   function renderTodoList(highlightId) {
+    closeColorPopover();
     var dateStr = state.selectedDate;
     var items = todosForDate(dateStr);
     todoList.innerHTML = "";
