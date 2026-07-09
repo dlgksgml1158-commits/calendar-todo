@@ -718,6 +718,36 @@
     renderCalendar();
   });
 
+  var swipeStartX = null;
+  var swipeStartY = null;
+
+  grid.addEventListener(
+    "touchstart",
+    function (e) {
+      swipeStartX = e.touches[0].clientX;
+      swipeStartY = e.touches[0].clientY;
+    },
+    { passive: true }
+  );
+
+  grid.addEventListener(
+    "touchend",
+    function (e) {
+      if (swipeStartX === null) return;
+      var dx = e.changedTouches[0].clientX - swipeStartX;
+      var dy = e.changedTouches[0].clientY - swipeStartY;
+      swipeStartX = null;
+      swipeStartY = null;
+      if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
+      if (dx < 0) {
+        prevBtn.click();
+      } else {
+        nextBtn.click();
+      }
+    },
+    { passive: true }
+  );
+
   updateShareUI();
   renderCalendar();
 
