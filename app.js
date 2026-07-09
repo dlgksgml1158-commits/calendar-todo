@@ -2,7 +2,6 @@
   "use strict";
 
   var STORAGE_TODOS = "ctd_todos_v1";
-  var STORAGE_COMPLETIONS = "ctd_completions_v1";
   var WEEKDAY_NAMES = ["일", "월", "화", "수", "목", "금", "토"];
   var REPEAT_LABEL = { daily: "매일", weekday: "평일", weekly: "매주", monthly: "매월" };
 
@@ -67,7 +66,6 @@
 
   var state = {
     todos: loadTodos(),
-    completions: loadCompletions(),
     year: new Date().getFullYear(),
     month: new Date().getMonth(), // 0-indexed
     selectedDate: null,
@@ -83,18 +81,8 @@
     }
   }
 
-  function loadCompletions() {
-    try {
-      var raw = localStorage.getItem(STORAGE_COMPLETIONS);
-      return raw ? JSON.parse(raw) : {};
-    } catch (e) {
-      return {};
-    }
-  }
-
   function save() {
     localStorage.setItem(STORAGE_TODOS, JSON.stringify(state.todos));
-    localStorage.setItem(STORAGE_COMPLETIONS, JSON.stringify(state.completions));
   }
 
   // ---------- date helpers ----------
@@ -264,7 +252,7 @@
   }
 
   document.addEventListener("click", function (e) {
-    if (!e.target.closest(".color-popover") && !e.target.closest(".todo-color-dot-btn")) {
+    if (!e.target.closest(".color-popover")) {
       closeColorPopover();
     }
   });
@@ -368,9 +356,8 @@
       var MAX_VISIBLE = 3;
 
       dayTodos.slice(0, MAX_VISIBLE).forEach(function (t) {
-        var key = t.id + "__" + dateStr;
         var chip = document.createElement("div");
-        chip.className = "event-chip" + (state.completions[key] ? " event-done" : "");
+        chip.className = "event-chip";
         chip.textContent = (t.time ? t.time + " " : "") + t.text;
         if (t.color && COLOR_VAR[t.color]) {
           chip.style.setProperty("--accent-text", COLOR_VAR[t.color]);
@@ -440,30 +427,19 @@
     var highlightEl = null;
 
     items.forEach(function (t) {
-      var key = t.id + "__" + dateStr;
-      var done = !!state.completions[key];
-
       var li = document.createElement("li");
-      li.className = "todo-item" + (done ? " done" : "");
+      li.className = "todo-item";
       if (t.id === highlightId) highlightEl = li;
 
-      li.addEventListener("click", function () {
-        toggleCompletion(key);
+      li.addEventListener("click", function (e) {
+        e.stopPropagation();
+        openColorPopover(t, li);
       });
 
-      var dotBtn = document.createElement("button");
-      dotBtn.type = "button";
-      dotBtn.className = "todo-color-dot-btn";
-      dotBtn.setAttribute("aria-label", "색상 변경");
       var dot = document.createElement("span");
       dot.className = "todo-color-dot";
       dot.style.background = t.color && COLOR_VAR[t.color] ? COLOR_VAR[t.color] : "var(--color-indigo)";
-      dotBtn.appendChild(dot);
-      dotBtn.addEventListener("click", function (e) {
-        e.stopPropagation();
-        openColorPopover(t, dotBtn);
-      });
-      li.appendChild(dotBtn);
+      li.appendChild(dot);
 
       if (t.time) {
         var timeLabel = document.createElement("span");
@@ -509,16 +485,6 @@
     }
   }
 
-  function toggleCompletion(key) {
-    if (state.completions[key]) {
-      delete state.completions[key];
-    } else {
-      state.completions[key] = true;
-    }
-    save();
-    renderTodoList();
-  }
-
   function deleteTodo(todo) {
     if (todo.repeat !== "none") {
       var ok = confirm("모든 반복 일정을 삭제할까요?");
@@ -526,10 +492,6 @@
     }
     state.todos = state.todos.filter(function (t) {
       return t.id !== todo.id;
-    });
-    var prefix = todo.id + "__";
-    Object.keys(state.completions).forEach(function (k) {
-      if (k.indexOf(prefix) === 0) delete state.completions[k];
     });
     save();
     renderTodoList();

@@ -234,12 +234,6 @@ body.no-scroll {
   text-align: left;
 }
 
-.event-chip.event-done {
-  color: var(--color-text-muted);
-  background: var(--color-surface-2);
-  text-decoration: line-through;
-}
-
 .event-more {
   font-size: 0.56rem;
   font-weight: 700;
@@ -431,19 +425,6 @@ body.no-scroll {
   box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 3.5px var(--color-text-muted);
 }
 
-.todo-color-dot-btn {
-  position: relative;
-  border: none;
-  background: none;
-  padding: 6px;
-  margin: -6px 0;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-}
-
 .todo-color-dot {
   width: 9px;
   height: 9px;
@@ -583,6 +564,7 @@ body.no-scroll {
 }
 
 .todo-item {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -601,10 +583,6 @@ body.no-scroll {
   flex: 1;
   font-size: 0.92rem;
   word-break: break-word;
-}
-
-.todo-item.done .text {
-  color: var(--color-text-muted);
 }
 
 .repeat-badge {
