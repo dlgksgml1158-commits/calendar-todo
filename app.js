@@ -203,6 +203,25 @@
   var selectedRepeat = "none";
   var todoList = document.getElementById("todoList");
   var emptyMsg = document.getElementById("emptyMsg");
+  var colorSwatches = document.querySelectorAll(".color-swatch");
+  var selectedColor = "";
+
+  var COLOR_VAR = {
+    red: "var(--color-rose)",
+    orange: "var(--color-orange)",
+    green: "var(--color-green)",
+    blue: "var(--color-blue)",
+    violet: "var(--color-violet)",
+  };
+
+  colorSwatches.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      selectedColor = btn.dataset.color;
+      colorSwatches.forEach(function (b) {
+        b.classList.toggle("active", b === btn);
+      });
+    });
+  });
 
   function closeRepeatMenu() {
     repeatMenu.hidden = true;
@@ -307,6 +326,10 @@
         var chip = document.createElement("div");
         chip.className = "event-chip" + (state.completions[key] ? " event-done" : "");
         chip.textContent = (t.time ? t.time + " " : "") + t.text;
+        if (t.color && COLOR_VAR[t.color]) {
+          chip.style.setProperty("--accent-text", COLOR_VAR[t.color]);
+          chip.style.setProperty("--accent-bg", "color-mix(in srgb, " + COLOR_VAR[t.color] + " 18%, var(--color-surface))");
+        }
         eventsWrap.appendChild(chip);
       });
 
@@ -340,6 +363,10 @@
     });
     repeatDropdownLabel.textContent = "오늘";
     closeRepeatMenu();
+    selectedColor = "";
+    colorSwatches.forEach(function (b) {
+      b.classList.toggle("active", b.dataset.color === "");
+    });
   }
 
   function openPanel(dateStr) {
@@ -377,6 +404,13 @@
       li.addEventListener("click", function () {
         toggleCompletion(key);
       });
+
+      if (t.color && COLOR_VAR[t.color]) {
+        var dot = document.createElement("span");
+        dot.className = "todo-color-dot";
+        dot.style.background = COLOR_VAR[t.color];
+        li.appendChild(dot);
+      }
 
       if (t.time) {
         var timeLabel = document.createElement("span");
@@ -464,6 +498,7 @@
       date: state.selectedDate,
       repeat: selectedRepeat,
       time: hasTime ? to24Hour(periodSelect.value, hourSelect.value, minuteVal) : null,
+      color: selectedColor || null,
     });
     save();
     resetAddFields();
