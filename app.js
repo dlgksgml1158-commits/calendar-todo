@@ -720,33 +720,48 @@
 
   var swipeStartX = null;
   var swipeStartY = null;
+  var swipeHorizontal = false;
 
   grid.addEventListener(
     "touchstart",
     function (e) {
       swipeStartX = e.touches[0].clientX;
       swipeStartY = e.touches[0].clientY;
+      swipeHorizontal = false;
     },
     { passive: true }
   );
 
   grid.addEventListener(
-    "touchend",
+    "touchmove",
     function (e) {
       if (swipeStartX === null) return;
-      var dx = e.changedTouches[0].clientX - swipeStartX;
-      var dy = e.changedTouches[0].clientY - swipeStartY;
-      swipeStartX = null;
-      swipeStartY = null;
-      if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
-      if (dx < 0) {
-        prevBtn.click();
-      } else {
-        nextBtn.click();
+      var dx = e.touches[0].clientX - swipeStartX;
+      var dy = e.touches[0].clientY - swipeStartY;
+      if (!swipeHorizontal && Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)) {
+        swipeHorizontal = true;
       }
+      if (swipeHorizontal && e.cancelable) e.preventDefault();
     },
-    { passive: true }
+    { passive: false }
   );
+
+  function endSwipe(e) {
+    if (swipeStartX === null) return;
+    var dx = e.changedTouches[0].clientX - swipeStartX;
+    var dy = e.changedTouches[0].clientY - swipeStartY;
+    swipeStartX = null;
+    swipeStartY = null;
+    if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
+    if (dx < 0) {
+      prevBtn.click();
+    } else {
+      nextBtn.click();
+    }
+  }
+
+  grid.addEventListener("touchend", endSwipe, { passive: true });
+  grid.addEventListener("touchcancel", endSwipe, { passive: true });
 
   updateShareUI();
   renderCalendar();
