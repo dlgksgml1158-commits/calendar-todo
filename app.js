@@ -209,7 +209,6 @@
   var COLOR_VAR = {
     red: "var(--color-rose)",
     green: "var(--color-green)",
-    violet: "var(--color-violet)",
   };
 
   colorSwatches.forEach(function (btn) {
@@ -219,6 +218,55 @@
         b.classList.toggle("active", b === btn);
       });
     });
+  });
+
+  var COLOR_OPTIONS = [
+    { value: "", label: "기본" },
+    { value: "red", label: "빨강" },
+    { value: "green", label: "초록" },
+  ];
+
+  function closeColorPopover() {
+    var existing = document.querySelector(".color-popover");
+    if (existing) existing.remove();
+  }
+
+  function openColorPopover(todo, anchorEl) {
+    var already = document.querySelector(".color-popover");
+    var wasOpenForThis = already && already.dataset.todoId === todo.id;
+    closeColorPopover();
+    if (wasOpenForThis) return;
+
+    var pop = document.createElement("div");
+    pop.className = "color-popover";
+    pop.dataset.todoId = todo.id;
+
+    COLOR_OPTIONS.forEach(function (opt) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "color-swatch" + ((todo.color || "") === opt.value ? " active" : "");
+      b.dataset.color = opt.value;
+      b.setAttribute("aria-label", opt.label);
+      var swatchDot = document.createElement("span");
+      swatchDot.className = "swatch-dot";
+      b.appendChild(swatchDot);
+      b.addEventListener("click", function (e) {
+        e.stopPropagation();
+        todo.color = opt.value || null;
+        save();
+        renderTodoList();
+        renderCalendar();
+      });
+      pop.appendChild(b);
+    });
+
+    anchorEl.appendChild(pop);
+  }
+
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest(".color-popover") && !e.target.closest(".todo-color-dot-btn")) {
+      closeColorPopover();
+    }
   });
 
   function closeRepeatMenu() {
@@ -403,12 +451,19 @@
         toggleCompletion(key);
       });
 
-      if (t.color && COLOR_VAR[t.color]) {
-        var dot = document.createElement("span");
-        dot.className = "todo-color-dot";
-        dot.style.background = COLOR_VAR[t.color];
-        li.appendChild(dot);
-      }
+      var dotBtn = document.createElement("button");
+      dotBtn.type = "button";
+      dotBtn.className = "todo-color-dot-btn";
+      dotBtn.setAttribute("aria-label", "색상 변경");
+      var dot = document.createElement("span");
+      dot.className = "todo-color-dot";
+      dot.style.background = t.color && COLOR_VAR[t.color] ? COLOR_VAR[t.color] : "var(--color-indigo)";
+      dotBtn.appendChild(dot);
+      dotBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        openColorPopover(t, dotBtn);
+      });
+      li.appendChild(dotBtn);
 
       if (t.time) {
         var timeLabel = document.createElement("span");
