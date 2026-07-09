@@ -2,7 +2,34 @@
   "use strict";
 
   var STORAGE_TODOS = "ctd_todos_v1";
+  var STORAGE_SPACE = "ctd_space_id";
   var WEEKDAY_NAMES = ["일", "월", "화", "수", "목", "금", "토"];
+
+  var firebaseConfig = {
+    apiKey: "AIzaSyCdxCUdwfLPB7Z3JxaEA04X47yhm8Gdy-4",
+    authDomain: "calendar-dbc4b.firebaseapp.com",
+    projectId: "calendar-dbc4b",
+    storageBucket: "calendar-dbc4b.firebasestorage.app",
+    messagingSenderId: "782006257809",
+    appId: "1:782006257809:web:3881a20b8d16abbf605730",
+  };
+  firebase.initializeApp(firebaseConfig);
+  var auth = firebase.auth();
+  var db = firebase.firestore();
+  var unsubscribeSpace = null;
+
+  function spaceTodosRef() {
+    return db.collection("spaces").doc(state.spaceId).collection("todos");
+  }
+
+  function generateSpaceCode() {
+    var chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    var code = "";
+    for (var i = 0; i < 6; i++) {
+      code += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return code;
+  }
   var REPEAT_LABEL = { daily: "매일", weekday: "평일", weekly: "매주", monthly: "매월" };
 
   // 대한민국 법정 공휴일 (대체공휴일 포함). 음력 기반 명절 날짜는 매년 바뀌므로
@@ -66,6 +93,7 @@
 
   var state = {
     todos: loadTodos(),
+    spaceId: localStorage.getItem(STORAGE_SPACE) || null,
     year: new Date().getFullYear(),
     month: new Date().getMonth(), // 0-indexed
     selectedDate: null,
@@ -73,6 +101,7 @@
 
   // ---------- storage ----------
   function loadTodos() {
+    if (localStorage.getItem(STORAGE_SPACE)) return [];
     try {
       var raw = localStorage.getItem(STORAGE_TODOS);
       return raw ? JSON.parse(raw) : [];
@@ -82,6 +111,7 @@
   }
 
   function save() {
+    if (state.spaceId) return;
     localStorage.setItem(STORAGE_TODOS, JSON.stringify(state.todos));
   }
 
@@ -174,6 +204,107 @@
   var prevBtn = document.getElementById("prevMonth");
   var nextBtn = document.getElementById("nextMonth");
 
+  var shareBtn = document.getElementById("shareBtn");
+  var shareBtnLabel = document.getElementById("shareBtnLabel");
+  var sharePanel = document.getElementById("sharePanel");
+  var shareStatusText = document.getElementById("shareStatusText");
+  var shareSoloView = document.getElementById("shareSoloView");
+  var shareActiveView = document.getElementById("shareActiveView");
+  var createSpaceBtn = document.getElementById("createSpaceBtn");
+  var joinCodeInput = document.getElementById("joinCodeInput");
+  var joinSpaceBtn = document.getElementById("joinSpaceBtn");
+  var shareCodeText = document.getElementById("shareCodeText");
+  var copyCodeBtn = document.getElementById("copyCodeBtn");
+  var leaveSpaceBtn = document.getElementById("leaveSpaceBtn");
+
+  function updateShareUI() {
+    if (state.spaceId) {
+      shareBtnLabel.textContent = "공유 중";
+      shareBtn.classList.add("active");
+      shareStatusText.textContent = "이 코드를 아는 사람과 일정을 함께 봐요.";
+      shareSoloView.hidden = true;
+      shareActiveView.hidden = false;
+      shareCodeText.textContent = state.spaceId;
+    } else {
+      shareBtnLabel.textContent = "공유 안 함";
+      shareBtn.classList.remove("active");
+      shareStatusText.textContent = "코드를 만들거나 입력해서 다른 사람과 일정을 공유하세요.";
+      shareSoloView.hidden = false;
+      shareActiveView.hidden = true;
+    }
+  }
+
+  function stopSpaceSync() {
+    if (unsubscribeSpace) {
+      unsubscribeSpace();
+      unsubscribeSpace = null;
+    }
+  }
+
+  function startSpaceSync() {
+    stopSpaceSync();
+    if (!state.spaceId) return;
+    unsubscribeSpace = spaceTodosRef().onSnapshot(
+      function (snap) {
+        state.todos = snap.docs.map(function (d) {
+          return Object.assign({ id: d.id }, d.data());
+        });
+        renderCalendar();
+        if (panel.classList.contains("open")) renderTodoList();
+      },
+      function (err) {
+        console.error("space sync error", err);
+      }
+    );
+  }
+
+  function enterSpace(code) {
+    state.spaceId = code;
+    localStorage.setItem(STORAGE_SPACE, code);
+    state.todos = [];
+    updateShareUI();
+    startSpaceSync();
+    renderCalendar();
+  }
+
+  shareBtn.addEventListener("click", function () {
+    sharePanel.hidden = !sharePanel.hidden;
+  });
+
+  createSpaceBtn.addEventListener("click", function () {
+    enterSpace(generateSpaceCode());
+    sharePanel.hidden = true;
+  });
+
+  joinSpaceBtn.addEventListener("click", function () {
+    var code = joinCodeInput.value.trim().toUpperCase();
+    if (!code) return;
+    joinCodeInput.value = "";
+    enterSpace(code);
+    sharePanel.hidden = true;
+  });
+
+  joinCodeInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      joinSpaceBtn.click();
+    }
+  });
+
+  copyCodeBtn.addEventListener("click", function () {
+    if (navigator.clipboard) navigator.clipboard.writeText(state.spaceId);
+  });
+
+  leaveSpaceBtn.addEventListener("click", function () {
+    stopSpaceSync();
+    state.spaceId = null;
+    localStorage.removeItem(STORAGE_SPACE);
+    state.todos = loadTodos();
+    updateShareUI();
+    renderCalendar();
+    sharePanel.hidden = true;
+  });
+
   var overlay = document.getElementById("overlay");
   var panel = document.getElementById("panel");
   var panelDate = document.getElementById("panelDate");
@@ -247,11 +378,16 @@
       b.appendChild(swatchDot);
       b.addEventListener("click", function (e) {
         e.stopPropagation();
-        todo.color = opt.value || null;
-        save();
+        var newColor = opt.value || null;
         closeColorPopover();
-        renderTodoList();
-        renderCalendar();
+        if (state.spaceId) {
+          spaceTodosRef().doc(todo.id).update({ color: newColor });
+        } else {
+          todo.color = newColor;
+          save();
+          renderTodoList();
+          renderCalendar();
+        }
       });
       pop.appendChild(b);
     });
@@ -505,6 +641,10 @@
       var ok = confirm("모든 반복 일정을 삭제할까요?");
       if (!ok) return;
     }
+    if (state.spaceId) {
+      spaceTodosRef().doc(todo.id).delete();
+      return;
+    }
     state.todos = state.todos.filter(function (t) {
       return t.id !== todo.id;
     });
@@ -519,20 +659,30 @@
   function addTodo() {
     var text = todoInput.value.trim();
     if (!text || !state.selectedDate) return;
-    var id = genId();
     var hasTime = !!hourSelect.value;
     var minuteVal = minuteSelect.value || "00";
-    state.todos.push({
-      id: id,
+    var todoData = {
       text: text,
       date: state.selectedDate,
       repeat: selectedRepeat,
       time: hasTime ? to24Hour(periodSelect.value, hourSelect.value, minuteVal) : null,
       color: selectedColor || null,
-    });
+    };
+    if (state.spaceId) {
+      spaceTodosRef()
+        .add(todoData)
+        .then(function (ref) {
+          resetAddFields();
+          renderTodoList(ref.id);
+          todoInput.focus();
+        });
+      return;
+    }
+    todoData.id = genId();
+    state.todos.push(todoData);
     save();
     resetAddFields();
-    renderTodoList(id);
+    renderTodoList(todoData.id);
     todoInput.focus();
   }
 
@@ -568,7 +718,18 @@
     renderCalendar();
   });
 
+  updateShareUI();
   renderCalendar();
+
+  auth.onAuthStateChanged(function (user) {
+    if (!user) {
+      auth.signInAnonymously().catch(function (err) {
+        console.error("anonymous sign-in failed", err);
+      });
+      return;
+    }
+    if (state.spaceId) startSpaceSync();
+  });
 
   // ---------- service worker (https / localhost only) ----------
   if (

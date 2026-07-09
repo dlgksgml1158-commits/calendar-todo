@@ -106,6 +106,100 @@ body.no-scroll {
   transform: scale(0.9);
 }
 
+/* Share */
+.share-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.share-btn {
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.share-btn.active {
+  border-color: var(--color-indigo);
+  color: var(--color-indigo);
+}
+
+.share-panel {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.share-status {
+  font-size: 0.76rem;
+  color: var(--color-text-muted);
+  margin: 0 0 10px;
+}
+
+.share-action-btn {
+  border: none;
+  background: var(--color-indigo);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.share-action-btn.leave {
+  background: var(--color-rose-light);
+  color: var(--color-rose);
+  margin-top: 10px;
+}
+
+#createSpaceBtn {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.join-row {
+  display: flex;
+  gap: 8px;
+}
+
+.join-row input {
+  flex: 1;
+  min-width: 0;
+  border: 1.5px solid var(--color-border);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.join-row input:focus {
+  outline: none;
+  border-color: var(--color-indigo);
+}
+
+.share-code-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.share-code {
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--color-indigo);
+}
+
 /* Weekday row */
 .weekday-row {
   display: grid;

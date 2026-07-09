@@ -1,4 +1,4 @@
-var CACHE_NAME = "calendar-todo-v36";
+var CACHE_NAME = "calendar-todo-v37";
 var ASSETS = [
   "./",
   "./index.html",
@@ -37,6 +37,7 @@ self.addEventListener("activate", function (event) {
 
 self.addEventListener("fetch", function (event) {
   if (event.request.method !== "GET") return;
+  if (new URL(event.request.url).origin !== self.location.origin) return;
   event.respondWith(
     caches.match(event.request).then(function (cached) {
       return (

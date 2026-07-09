@@ -22,6 +22,32 @@
     <button id="nextMonth" class="nav-btn" aria-label="다음 달">›</button>
   </header>
 
+  <div class="share-row">
+    <button type="button" id="shareBtn" class="share-btn">
+      <span id="shareBtnLabel">공유 안 함</span>
+    </button>
+  </div>
+
+  <div class="share-panel" id="sharePanel" hidden>
+    <p id="shareStatusText" class="share-status"></p>
+
+    <div id="shareSoloView">
+      <button type="button" id="createSpaceBtn" class="share-action-btn">새 공유 코드 만들기</button>
+      <div class="join-row">
+        <input type="text" id="joinCodeInput" placeholder="공유 코드 입력" maxlength="8" />
+        <button type="button" id="joinSpaceBtn" class="share-action-btn">참여</button>
+      </div>
+    </div>
+
+    <div id="shareActiveView" hidden>
+      <div class="share-code-row">
+        <span id="shareCodeText" class="share-code"></span>
+        <button type="button" id="copyCodeBtn" class="share-action-btn">코드 복사</button>
+      </div>
+      <button type="button" id="leaveSpaceBtn" class="share-action-btn leave">공유 그만두기</button>
+    </div>
+  </div>
+
   <div class="weekday-row">
     <span class="wd sun">일</span>
     <span class="wd">월</span>
@@ -110,6 +136,9 @@
   <p id="emptyMsg" class="empty-msg" hidden>오늘 등록된 일정이 없습니다.</p>
 </section>
 
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
