@@ -10,9 +10,7 @@
   --color-indigo-light: #edebfd;
   --color-rose: #f43f5e;
   --color-rose-light: #ffe4e9;
-  --color-orange: #eb6834;
   --color-green: #008300;
-  --color-blue: #2a78d6;
   --color-violet: #4a3aa7;
   --color-sun: #f43f5e;
   --color-sat: #3b82f6;
@@ -37,9 +35,7 @@
     --color-indigo-dark: #a29bff;
     --color-indigo-light: #262347;
     --color-rose-light: #401d29;
-    --color-orange: #d95926;
     --color-green: #17a317;
-    --color-blue: #3987e5;
     --color-violet: #9085e9;
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
@@ -429,16 +425,8 @@ body.no-scroll {
   background: var(--color-rose);
 }
 
-.color-swatch[data-color="orange"] .swatch-dot {
-  background: var(--color-orange);
-}
-
 .color-swatch[data-color="green"] .swatch-dot {
   background: var(--color-green);
-}
-
-.color-swatch[data-color="blue"] .swatch-dot {
-  background: var(--color-blue);
 }
 
 .color-swatch[data-color="violet"] .swatch-dot {

@@ -208,9 +208,7 @@
 
   var COLOR_VAR = {
     red: "var(--color-rose)",
-    orange: "var(--color-orange)",
     green: "var(--color-green)",
-    blue: "var(--color-blue)",
     violet: "var(--color-violet)",
   };
 
