@@ -739,7 +739,9 @@
       var dy = e.clientY - swipeStartY;
       if (!swipeHorizontal && Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)) {
         swipeHorizontal = true;
-        grid.setPointerCapture(swipePointerId);
+        try {
+          grid.setPointerCapture(swipePointerId);
+        } catch (err) {}
       }
       if (swipeHorizontal && e.cancelable) e.preventDefault();
     },
@@ -763,6 +765,26 @@
 
   grid.addEventListener("pointerup", endSwipe);
   grid.addEventListener("pointercancel", endSwipe);
+
+  var wheelCooldown = false;
+  grid.addEventListener(
+    "wheel",
+    function (e) {
+      if (Math.abs(e.deltaX) < 20 || Math.abs(e.deltaX) < Math.abs(e.deltaY)) return;
+      e.preventDefault();
+      if (wheelCooldown) return;
+      wheelCooldown = true;
+      setTimeout(function () {
+        wheelCooldown = false;
+      }, 500);
+      if (e.deltaX < 0) {
+        nextBtn.click();
+      } else {
+        prevBtn.click();
+      }
+    },
+    { passive: false }
+  );
 
   updateShareUI();
   renderCalendar();
