@@ -721,25 +721,25 @@
   var swipeStartX = null;
   var swipeStartY = null;
   var swipeHorizontal = false;
+  var swipePointerId = null;
+
+  grid.addEventListener("pointerdown", function (e) {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    swipePointerId = e.pointerId;
+    swipeStartX = e.clientX;
+    swipeStartY = e.clientY;
+    swipeHorizontal = false;
+  });
 
   grid.addEventListener(
-    "touchstart",
+    "pointermove",
     function (e) {
-      swipeStartX = e.touches[0].clientX;
-      swipeStartY = e.touches[0].clientY;
-      swipeHorizontal = false;
-    },
-    { passive: true }
-  );
-
-  grid.addEventListener(
-    "touchmove",
-    function (e) {
-      if (swipeStartX === null) return;
-      var dx = e.touches[0].clientX - swipeStartX;
-      var dy = e.touches[0].clientY - swipeStartY;
+      if (swipeStartX === null || e.pointerId !== swipePointerId) return;
+      var dx = e.clientX - swipeStartX;
+      var dy = e.clientY - swipeStartY;
       if (!swipeHorizontal && Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)) {
         swipeHorizontal = true;
+        grid.setPointerCapture(swipePointerId);
       }
       if (swipeHorizontal && e.cancelable) e.preventDefault();
     },
@@ -747,11 +747,12 @@
   );
 
   function endSwipe(e) {
-    if (swipeStartX === null) return;
-    var dx = e.changedTouches[0].clientX - swipeStartX;
-    var dy = e.changedTouches[0].clientY - swipeStartY;
+    if (swipeStartX === null || e.pointerId !== swipePointerId) return;
+    var dx = e.clientX - swipeStartX;
+    var dy = e.clientY - swipeStartY;
     swipeStartX = null;
     swipeStartY = null;
+    swipePointerId = null;
     if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
     if (dx < 0) {
       prevBtn.click();
@@ -760,8 +761,8 @@
     }
   }
 
-  grid.addEventListener("touchend", endSwipe, { passive: true });
-  grid.addEventListener("touchcancel", endSwipe, { passive: true });
+  grid.addEventListener("pointerup", endSwipe);
+  grid.addEventListener("pointercancel", endSwipe);
 
   updateShareUI();
   renderCalendar();

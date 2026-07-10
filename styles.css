@@ -233,6 +233,12 @@ body.no-scroll {
   padding: 6px;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.calendar-grid:active {
+  cursor: grabbing;
 }
 
 .cell {
