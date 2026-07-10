@@ -755,9 +755,9 @@
     swipePointerId = null;
     if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
     if (dx < 0) {
-      prevBtn.click();
-    } else {
       nextBtn.click();
+    } else {
+      prevBtn.click();
     }
   }
 
