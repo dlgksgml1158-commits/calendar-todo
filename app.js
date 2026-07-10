@@ -778,9 +778,9 @@
         wheelCooldown = false;
       }, 500);
       if (e.deltaX < 0) {
-        nextBtn.click();
-      } else {
         prevBtn.click();
+      } else {
+        nextBtn.click();
       }
     },
     { passive: false }
