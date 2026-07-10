@@ -234,11 +234,6 @@ body.no-scroll {
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   touch-action: pan-y;
-  cursor: grab;
-}
-
-.calendar-grid:active {
-  cursor: grabbing;
 }
 
 .cell {

@@ -724,7 +724,7 @@
   var swipePointerId = null;
 
   grid.addEventListener("pointerdown", function (e) {
-    if (e.pointerType === "mouse" && e.button !== 0) return;
+    if (e.pointerType !== "touch") return;
     swipePointerId = e.pointerId;
     swipeStartX = e.clientX;
     swipeStartY = e.clientY;
@@ -765,26 +765,6 @@
 
   grid.addEventListener("pointerup", endSwipe);
   grid.addEventListener("pointercancel", endSwipe);
-
-  var wheelCooldown = false;
-  grid.addEventListener(
-    "wheel",
-    function (e) {
-      if (Math.abs(e.deltaX) < 20 || Math.abs(e.deltaX) < Math.abs(e.deltaY)) return;
-      e.preventDefault();
-      if (wheelCooldown) return;
-      wheelCooldown = true;
-      setTimeout(function () {
-        wheelCooldown = false;
-      }, 500);
-      if (e.deltaX < 0) {
-        prevBtn.click();
-      } else {
-        nextBtn.click();
-      }
-    },
-    { passive: false }
-  );
 
   updateShareUI();
   renderCalendar();
