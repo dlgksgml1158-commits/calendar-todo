@@ -192,6 +192,7 @@ body.no-scroll {
   gap: 8px;
   padding: 8px 0;
   border-top: 1px solid var(--color-border);
+  cursor: pointer;
 }
 
 .all-schedule-item:first-child {
@@ -1038,7 +1039,6 @@ body.no-scroll {
   }
 
   .today-btn .btn-icon,
-  .today-btn .btn-icon-label,
   .share-btn .btn-icon {
     display: block;
   }
@@ -1048,14 +1048,9 @@ body.no-scroll {
     line-height: 1;
   }
 
-  .btn-icon-label {
-    font-size: 0.66rem;
-    font-weight: 700;
-  }
-
   .today-btn,
   .share-btn {
-    color: var(--color-indigo);
+    color: var(--color-today);
   }
 
   .cell {

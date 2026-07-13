@@ -310,6 +310,11 @@
       info.appendChild(textLine);
 
       li.appendChild(info);
+      li.addEventListener("click", function () {
+        todayAlarmPanel.hidden = true;
+        openPanel(t.date);
+        enterEditMode(t);
+      });
       todayAlarmList.appendChild(li);
     });
 
@@ -695,6 +700,11 @@
       info.appendChild(textLine);
 
       li.appendChild(info);
+      li.addEventListener("click", function () {
+        sharePanel.hidden = true;
+        openPanel(t.date);
+        enterEditMode(t);
+      });
       allScheduleList.appendChild(li);
     });
   }
