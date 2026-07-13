@@ -214,6 +214,8 @@
   var shareBtn = document.getElementById("shareBtn");
   var shareBtnLabel = document.getElementById("shareBtnLabel");
   var sharePanel = document.getElementById("sharePanel");
+  var allScheduleList = document.getElementById("allScheduleList");
+  var allScheduleEmpty = document.getElementById("allScheduleEmpty");
   var shareStatusText = document.getElementById("shareStatusText");
   var shareSoloView = document.getElementById("shareSoloView");
   var shareActiveView = document.getElementById("shareActiveView");
@@ -576,6 +578,58 @@
 
       grid.appendChild(cell);
     }
+
+    renderAllScheduleList();
+  }
+
+  function formatFullDate(dateStr) {
+    var d = parseYMD(dateStr);
+    return d.getFullYear() + "년 " + (d.getMonth() + 1) + "월 " + d.getDate() + "일";
+  }
+
+  function renderAllScheduleList() {
+    var items = state.todos
+      .slice()
+      .sort(function (a, b) {
+        if (a.date !== b.date) return a.date < b.date ? -1 : 1;
+        if (!a.time && !b.time) return 0;
+        if (!a.time) return -1;
+        if (!b.time) return 1;
+        return a.time < b.time ? -1 : a.time > b.time ? 1 : 0;
+      });
+
+    allScheduleList.innerHTML = "";
+    allScheduleEmpty.hidden = items.length > 0;
+
+    items.forEach(function (t) {
+      var li = document.createElement("li");
+      li.className = "all-schedule-item";
+
+      var dot = document.createElement("span");
+      dot.className = "all-schedule-dot";
+      dot.style.background = t.color && COLOR_VAR[t.color] ? COLOR_VAR[t.color] : "var(--color-indigo)";
+      li.appendChild(dot);
+
+      var info = document.createElement("div");
+      info.className = "all-schedule-info";
+
+      var dateLine = document.createElement("div");
+      dateLine.className = "all-schedule-date";
+      var dateText = formatFullDate(t.date);
+      if (t.endDate) dateText += " ~ " + formatFullDate(t.endDate);
+      if (t.time) dateText += " " + formatTime12h(t.time);
+      if (t.repeat !== "none") dateText += " · " + REPEAT_LABEL[t.repeat];
+      dateLine.textContent = dateText;
+      info.appendChild(dateLine);
+
+      var textLine = document.createElement("div");
+      textLine.className = "all-schedule-text";
+      textLine.textContent = t.text;
+      info.appendChild(textLine);
+
+      li.appendChild(info);
+      allScheduleList.appendChild(li);
+    });
   }
 
   // ---------- panel ----------

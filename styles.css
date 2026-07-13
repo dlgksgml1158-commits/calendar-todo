@@ -169,6 +169,67 @@ body.no-scroll {
   margin: 0 0 10px;
 }
 
+.all-schedule-title {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--color-text);
+  margin: 0 0 8px;
+}
+
+.all-schedule-list {
+  list-style: none;
+  margin: 0 0 10px;
+  padding: 0;
+  max-height: 260px;
+  overflow-y: auto;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.all-schedule-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.all-schedule-item:first-child {
+  border-top: none;
+}
+
+.all-schedule-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.all-schedule-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.all-schedule-date {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.all-schedule-text {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--color-text);
+  word-break: break-word;
+}
+
+.all-schedule-empty {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin: 0 0 10px;
+}
+
 .share-action-btn {
   border: none;
   background: var(--color-indigo);
