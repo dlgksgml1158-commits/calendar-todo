@@ -1053,11 +1053,8 @@ body.no-scroll {
     font-weight: 700;
   }
 
-  .today-btn {
-    color: var(--color-indigo);
-  }
-
-  .share-btn.active .btn-icon {
+  .today-btn,
+  .share-btn {
     color: var(--color-indigo);
   }
 
