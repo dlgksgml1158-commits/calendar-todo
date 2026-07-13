@@ -879,17 +879,14 @@ body.no-scroll {
     flex-shrink: 0;
   }
 
-  .share-row {
-    margin-bottom: 10px;
-    flex-shrink: 0;
-  }
-
   .weekday-row {
+    order: 1;
     flex-shrink: 0;
     padding: 0 4px;
   }
 
   .calendar-grid {
+    order: 2;
     flex: 1;
     min-height: 0;
     grid-auto-rows: unset;
@@ -899,6 +896,18 @@ body.no-scroll {
     box-shadow: none;
     padding: 4px 0 0;
     gap: 0;
+  }
+
+  .share-panel {
+    order: 3;
+    flex-shrink: 0;
+    margin: 10px 12px 0;
+  }
+
+  .share-row {
+    order: 4;
+    flex-shrink: 0;
+    margin: 10px 12px 0;
   }
 
   .cell {
