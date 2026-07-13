@@ -110,7 +110,23 @@ body.no-scroll {
 .share-row {
   display: flex;
   justify-content: center;
+  gap: 8px;
   margin-bottom: 14px;
+}
+
+.today-btn {
+  border: 1.5px solid var(--color-indigo);
+  background: var(--color-surface);
+  color: var(--color-indigo);
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.today-btn:active {
+  background: var(--color-indigo-light);
 }
 
 .share-btn {
@@ -473,10 +489,85 @@ body.no-scroll {
   transform: scale(0.9);
 }
 
+.cancel-edit-btn {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.12s ease;
+}
+
+.cancel-edit-btn:active {
+  transform: scale(0.9);
+  background: var(--color-rose-light);
+  color: var(--color-rose);
+}
+
+.cancel-edit-btn[hidden] {
+  display: none;
+}
+
 .meta-row {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.range-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.range-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.range-toggle input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--color-indigo);
+  cursor: pointer;
+}
+
+.end-date-input {
+  border: 1.5px solid var(--color-border);
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+.end-date-input:focus {
+  outline: none;
+  border-color: var(--color-indigo);
+}
+
+.end-date-input[hidden] {
+  display: none;
+}
+
+.repeat-dropdown-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .color-row {
@@ -683,6 +774,16 @@ body.no-scroll {
   background: var(--color-border);
 }
 
+.todo-item.editing {
+  background: var(--color-indigo-light);
+  box-shadow: 0 0 0 1.5px var(--color-indigo) inset;
+}
+
+.range-badge {
+  background: var(--color-indigo-light);
+  color: var(--color-indigo);
+}
+
 .todo-item .text {
   flex: 1;
   font-size: 0.92rem;
@@ -753,5 +854,47 @@ body.no-scroll {
 
   .modal-handle {
     display: none;
+  }
+}
+
+/* Mobile: stretch the calendar to fill the screen like a native calendar app */
+@media (max-width: 639px) {
+  html, body {
+    height: 100%;
+  }
+
+  .app {
+    max-width: none;
+    height: 100vh;
+    height: 100dvh;
+    margin: 0;
+    padding: max(12px, env(safe-area-inset-top)) 8px max(10px, env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+  }
+
+  .calendar-header {
+    margin-bottom: 12px;
+    flex-shrink: 0;
+  }
+
+  .share-row {
+    margin-bottom: 10px;
+    flex-shrink: 0;
+  }
+
+  .weekday-row {
+    flex-shrink: 0;
+  }
+
+  .calendar-grid {
+    flex: 1;
+    min-height: 0;
+    grid-auto-rows: unset;
+    grid-template-rows: repeat(6, 1fr);
+  }
+
+  .cell {
+    min-height: 64px;
   }
 }

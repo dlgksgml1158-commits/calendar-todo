@@ -23,6 +23,7 @@
   </header>
 
   <div class="share-row">
+    <button type="button" id="todayBtn" class="today-btn" aria-label="오늘로 이동">오늘</button>
     <button type="button" id="shareBtn" class="share-btn">
       <span id="shareBtnLabel">공유 안 함</span>
     </button>
@@ -73,6 +74,7 @@
   <div class="add-row">
     <div class="quick-input">
       <input type="text" id="todoInput" placeholder="" maxlength="200" />
+      <button type="button" id="cancelEditBtn" class="cancel-edit-btn" aria-label="편집 취소" hidden>✕</button>
       <button type="button" id="addBtn" class="send-btn" aria-label="추가">+</button>
     </div>
     <div class="meta-row">
@@ -124,6 +126,13 @@
           <option value="55">55</option>
         </select>
       </div>
+    </div>
+    <div class="range-row" id="rangeRow">
+      <label class="range-toggle" for="rangeToggle">
+        <input type="checkbox" id="rangeToggle" />
+        <span>여러 날 연속</span>
+      </label>
+      <input type="date" id="endDateInput" class="end-date-input" aria-label="종료 날짜" hidden />
     </div>
     <div class="color-row" id="colorRow">
       <button type="button" class="color-swatch active" data-color="" aria-label="기본"><span class="swatch-dot"></span></button>

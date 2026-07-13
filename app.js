@@ -164,10 +164,16 @@
     return pad(h) + ":" + minute;
   }
 
+  function formatMonthDay(dateStr) {
+    var p = dateStr.split("-").map(Number);
+    return p[1] + "/" + p[2];
+  }
+
   function todoOccursOn(todo, dateStr) {
     if (dateStr < todo.date) return false;
     switch (todo.repeat) {
       case "none":
+        if (todo.endDate) return dateStr <= todo.endDate;
         return dateStr === todo.date;
       case "daily":
         return true;
@@ -203,6 +209,7 @@
   var grid = document.getElementById("calendarGrid");
   var prevBtn = document.getElementById("prevMonth");
   var nextBtn = document.getElementById("nextMonth");
+  var todayBtn = document.getElementById("todayBtn");
 
   var shareBtn = document.getElementById("shareBtn");
   var shareBtnLabel = document.getElementById("shareBtnLabel");
@@ -310,6 +317,7 @@
   var panelDate = document.getElementById("panelDate");
   var closePanelBtn = document.getElementById("closePanel");
   var addBtn = document.getElementById("addBtn");
+  var cancelEditBtn = document.getElementById("cancelEditBtn");
   var todoInput = document.getElementById("todoInput");
   var periodSelect = document.getElementById("periodSelect");
   var hourSelect = document.getElementById("hourSelect");
@@ -320,10 +328,39 @@
   var repeatMenu = document.getElementById("repeatMenu");
   var repeatMenuItems = document.querySelectorAll(".repeat-menu-item");
   var selectedRepeat = "none";
+  var rangeToggle = document.getElementById("rangeToggle");
+  var endDateInput = document.getElementById("endDateInput");
   var todoList = document.getElementById("todoList");
   var emptyMsg = document.getElementById("emptyMsg");
   var colorSwatches = document.querySelectorAll(".color-swatch");
   var selectedColor = "";
+  var editingId = null;
+  var editingStartDate = null;
+
+  function setRepeatDisabled(disabled) {
+    repeatDropdownBtn.disabled = disabled;
+    if (disabled) closeRepeatMenu();
+  }
+
+  rangeToggle.addEventListener("change", function () {
+    var baseDate = editingId ? editingStartDate : state.selectedDate;
+    if (rangeToggle.checked) {
+      selectedRepeat = "none";
+      repeatMenuItems.forEach(function (i) {
+        i.classList.toggle("active", i.dataset.value === "none");
+      });
+      repeatDropdownLabel.textContent = "오늘";
+      setRepeatDisabled(true);
+      endDateInput.hidden = false;
+      endDateInput.min = baseDate;
+      if (!endDateInput.value || endDateInput.value < baseDate) {
+        endDateInput.value = baseDate;
+      }
+    } else {
+      setRepeatDisabled(false);
+      endDateInput.hidden = true;
+    }
+  });
 
   var COLOR_VAR = {
     red: "var(--color-rose)",
@@ -394,8 +431,15 @@
 
     document.body.appendChild(pop);
     var rect = anchorEl.getBoundingClientRect();
+    var margin = 8;
+    var popWidth = pop.offsetWidth;
+    var left = rect.left;
+    if (left + popWidth > window.innerWidth - margin) {
+      left = window.innerWidth - margin - popWidth;
+    }
+    if (left < margin) left = margin;
     pop.style.top = rect.top + rect.height / 2 + "px";
-    pop.style.right = window.innerWidth - rect.right + "px";
+    pop.style.left = left + "px";
 
     anchorEl.style.visibility = "hidden";
     hiddenDotEl = anchorEl;
@@ -546,10 +590,82 @@
     });
     repeatDropdownLabel.textContent = "오늘";
     closeRepeatMenu();
+    setRepeatDisabled(false);
     selectedColor = "";
     colorSwatches.forEach(function (b) {
       b.classList.toggle("active", b.dataset.color === "");
     });
+    rangeToggle.checked = false;
+    endDateInput.hidden = true;
+    endDateInput.value = "";
+    editingId = null;
+    editingStartDate = null;
+    addBtn.textContent = "+";
+    addBtn.setAttribute("aria-label", "추가");
+    cancelEditBtn.hidden = true;
+  }
+
+  cancelEditBtn.addEventListener("click", function () {
+    resetAddFields();
+    renderTodoList();
+  });
+
+  function enterEditMode(todo) {
+    closeColorPopover();
+    editingId = todo.id;
+    editingStartDate = todo.date;
+
+    todoInput.value = todo.text;
+
+    if (todo.time) {
+      var parts = todo.time.split(":").map(Number);
+      var h = parts[0];
+      var m = parts[1];
+      periodSelect.value = h < 12 ? "AM" : "PM";
+      var h12 = h % 12;
+      if (h12 === 0) h12 = 12;
+      hourSelect.value = String(h12);
+      minuteSelect.value = pad(m);
+    } else {
+      periodSelect.value = "AM";
+      hourSelect.value = "";
+      minuteSelect.value = "";
+    }
+
+    selectedRepeat = todo.repeat;
+    var matchItem = null;
+    repeatMenuItems.forEach(function (i) {
+      var isMatch = i.dataset.value === todo.repeat;
+      i.classList.toggle("active", isMatch);
+      if (isMatch) matchItem = i;
+    });
+    repeatDropdownLabel.textContent = matchItem ? matchItem.textContent : "오늘";
+    closeRepeatMenu();
+
+    selectedColor = todo.color || "";
+    colorSwatches.forEach(function (b) {
+      b.classList.toggle("active", b.dataset.color === selectedColor);
+    });
+
+    if (todo.endDate) {
+      rangeToggle.checked = true;
+      endDateInput.hidden = false;
+      endDateInput.min = todo.date;
+      endDateInput.value = todo.endDate;
+      setRepeatDisabled(true);
+    } else {
+      rangeToggle.checked = false;
+      endDateInput.hidden = true;
+      endDateInput.value = "";
+      setRepeatDisabled(false);
+    }
+
+    addBtn.textContent = "✓";
+    addBtn.setAttribute("aria-label", "수정 저장");
+    cancelEditBtn.hidden = false;
+
+    renderTodoList();
+    todoInput.focus();
   }
 
   function openPanel(dateStr) {
@@ -579,17 +695,20 @@
 
     items.forEach(function (t) {
       var li = document.createElement("li");
-      li.className = "todo-item";
+      li.className = "todo-item" + (t.id === editingId ? " editing" : "");
       if (t.id === highlightId) highlightEl = li;
 
       var dot = document.createElement("span");
       dot.className = "todo-color-dot";
       dot.style.background = t.color && COLOR_VAR[t.color] ? COLOR_VAR[t.color] : "var(--color-indigo)";
-      li.appendChild(dot);
-
-      li.addEventListener("click", function (e) {
+      dot.addEventListener("click", function (e) {
         e.stopPropagation();
         openColorPopover(t, dot);
+      });
+      li.appendChild(dot);
+
+      li.addEventListener("click", function () {
+        enterEditMode(t);
       });
 
       if (t.time) {
@@ -609,6 +728,13 @@
         badge.className = "repeat-badge";
         badge.textContent = REPEAT_LABEL[t.repeat];
         li.appendChild(badge);
+      }
+
+      if (t.endDate) {
+        var rangeBadge = document.createElement("span");
+        rangeBadge.className = "repeat-badge range-badge";
+        rangeBadge.textContent = formatMonthDay(t.date) + "~" + formatMonthDay(t.endDate);
+        li.appendChild(rangeBadge);
       }
 
       var delBtn = document.createElement("button");
@@ -637,10 +763,12 @@
   }
 
   function deleteTodo(todo) {
-    if (todo.repeat !== "none") {
-      var ok = confirm("모든 반복 일정을 삭제할까요?");
+    if (todo.repeat !== "none" || todo.endDate) {
+      var msg = todo.repeat !== "none" ? "모든 반복 일정을 삭제할까요?" : "여러 날짜에 걸친 일정입니다. 삭제할까요?";
+      var ok = confirm(msg);
       if (!ok) return;
     }
+    if (todo.id === editingId) resetAddFields();
     if (state.spaceId) {
       spaceTodosRef().doc(todo.id).delete();
       return;
@@ -656,18 +784,54 @@
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
   }
 
+  function updateTodo(id, data) {
+    if (state.spaceId) {
+      spaceTodosRef()
+        .doc(id)
+        .update(data)
+        .then(function () {
+          resetAddFields();
+          renderTodoList(id);
+          todoInput.focus();
+        });
+      return;
+    }
+    var idx = state.todos.findIndex(function (t) {
+      return t.id === id;
+    });
+    if (idx === -1) return;
+    Object.assign(state.todos[idx], data);
+    save();
+    resetAddFields();
+    renderTodoList(id);
+    todoInput.focus();
+  }
+
   function addTodo() {
     var text = todoInput.value.trim();
     if (!text || !state.selectedDate) return;
     var hasTime = !!hourSelect.value;
     var minuteVal = minuteSelect.value || "00";
+    var baseDate = editingId ? editingStartDate : state.selectedDate;
+    var endDateVal = null;
+    if (rangeToggle.checked && endDateInput.value && endDateInput.value > baseDate) {
+      endDateVal = endDateInput.value;
+    }
     var todoData = {
       text: text,
-      date: state.selectedDate,
       repeat: selectedRepeat,
       time: hasTime ? to24Hour(periodSelect.value, hourSelect.value, minuteVal) : null,
       color: selectedColor || null,
+      endDate: endDateVal,
     };
+
+    if (editingId) {
+      updateTodo(editingId, todoData);
+      return;
+    }
+
+    todoData.date = state.selectedDate;
+
     if (state.spaceId) {
       spaceTodosRef()
         .add(todoData)
@@ -715,6 +879,13 @@
       state.month = 0;
       state.year++;
     }
+    renderCalendar();
+  });
+
+  todayBtn.addEventListener("click", function () {
+    var now = new Date();
+    state.year = now.getFullYear();
+    state.month = now.getMonth();
     renderCalendar();
   });
 
