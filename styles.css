@@ -1048,6 +1048,10 @@ body.no-scroll {
     line-height: 1;
   }
 
+  #todayBtn .btn-icon {
+    font-size: 1.7rem;
+  }
+
   .today-btn,
   .share-btn {
     color: var(--color-today);
