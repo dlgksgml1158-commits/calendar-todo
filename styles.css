@@ -938,6 +938,7 @@ body.no-scroll {
   }
 
   .app {
+    position: relative;
     max-width: none;
     height: 100vh;
     height: 100dvh;
@@ -973,9 +974,14 @@ body.no-scroll {
   }
 
   .share-panel {
-    order: 3;
-    flex-shrink: 0;
-    margin: 10px 12px 0;
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: calc(70px + env(safe-area-inset-bottom));
+    z-index: 30;
+    max-height: 65dvh;
+    overflow-y: auto;
+    margin: 0;
   }
 
   .share-row {
