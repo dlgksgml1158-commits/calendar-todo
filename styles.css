@@ -915,10 +915,10 @@ body.no-scroll {
     flex-shrink: 0;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    align-items: center;
+    align-items: stretch;
     gap: 0;
     margin: 6px 0 0;
-    padding-top: 8px;
+    padding-top: 0;
     border-top: 1px solid var(--color-border);
   }
 
@@ -944,6 +944,16 @@ body.no-scroll {
   .share-btn:active {
     background: none;
     opacity: 0.6;
+  }
+
+  .share-row > * {
+    box-sizing: border-box;
+    min-height: 48px;
+    border-right: 1px solid var(--color-border);
+  }
+
+  .share-row > *:last-child {
+    border-right: none;
   }
 
   .today-btn .btn-text,
