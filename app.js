@@ -216,6 +216,10 @@
   var sharePanel = document.getElementById("sharePanel");
   var allScheduleList = document.getElementById("allScheduleList");
   var allScheduleEmpty = document.getElementById("allScheduleEmpty");
+  var alarmBtn = document.getElementById("alarmBtn");
+  var todayAlarmPanel = document.getElementById("todayAlarmPanel");
+  var todayAlarmList = document.getElementById("todayAlarmList");
+  var todayAlarmEmpty = document.getElementById("todayAlarmEmpty");
   var shareStatusText = document.getElementById("shareStatusText");
   var shareSoloView = document.getElementById("shareSoloView");
   var shareActiveView = document.getElementById("shareActiveView");
@@ -277,7 +281,69 @@
   }
 
   shareBtn.addEventListener("click", function () {
+    todayAlarmPanel.hidden = true;
     sharePanel.hidden = !sharePanel.hidden;
+  });
+
+  function renderTodayAlarmList() {
+    var todayStr = formatDateObj(new Date());
+    var items = todosForDate(todayStr);
+
+    todayAlarmList.innerHTML = "";
+    todayAlarmEmpty.hidden = items.length > 0;
+
+    items.forEach(function (t) {
+      var li = document.createElement("li");
+      li.className = "all-schedule-item";
+
+      var dot = document.createElement("span");
+      dot.className = "all-schedule-dot";
+      dot.style.background = t.color && COLOR_VAR[t.color] ? COLOR_VAR[t.color] : "var(--color-indigo)";
+      li.appendChild(dot);
+
+      var info = document.createElement("div");
+      info.className = "all-schedule-info";
+
+      var textLine = document.createElement("div");
+      textLine.className = "all-schedule-text";
+      textLine.textContent = (t.time ? formatTime12h(t.time) + " " : "") + t.text;
+      info.appendChild(textLine);
+
+      li.appendChild(info);
+      todayAlarmList.appendChild(li);
+    });
+
+    return items;
+  }
+
+  function notifyTodaySchedule(items) {
+    if (!("Notification" in window) || !items.length) return;
+    var body = items
+      .map(function (t) {
+        return (t.time ? formatTime12h(t.time) + " " : "") + t.text;
+      })
+      .join("\n");
+
+    function fire() {
+      new Notification("오늘 일정", { body: body });
+    }
+
+    if (Notification.permission === "granted") {
+      fire();
+    } else if (Notification.permission !== "denied") {
+      Notification.requestPermission().then(function (perm) {
+        if (perm === "granted") fire();
+      });
+    }
+  }
+
+  alarmBtn.addEventListener("click", function () {
+    sharePanel.hidden = true;
+    todayAlarmPanel.hidden = !todayAlarmPanel.hidden;
+    if (!todayAlarmPanel.hidden) {
+      var items = renderTodayAlarmList();
+      notifyTodaySchedule(items);
+    }
   });
 
   createSpaceBtn.addEventListener("click", function () {
@@ -580,6 +646,7 @@
     }
 
     renderAllScheduleList();
+    renderTodayAlarmList();
   }
 
   function formatFullDate(dateStr) {

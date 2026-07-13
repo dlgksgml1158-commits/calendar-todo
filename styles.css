@@ -151,7 +151,8 @@ body.no-scroll {
 
 .bottom-bar-spacer,
 .btn-icon,
-.btn-icon-label {
+.btn-icon-label,
+.alarm-btn {
   display: none;
 }
 

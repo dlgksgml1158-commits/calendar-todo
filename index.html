@@ -29,11 +29,21 @@
       <span class="btn-icon" aria-hidden="true">⌂</span>
       <span class="btn-icon-label" aria-hidden="true">Today</span>
     </button>
-    <div class="bottom-bar-spacer" aria-hidden="true"></div>
+    <button type="button" id="alarmBtn" class="today-btn alarm-btn" aria-label="오늘 일정 알림">
+      <span class="btn-text">알림</span>
+      <span class="btn-icon" aria-hidden="true">🔔</span>
+      <span class="btn-icon-label" aria-hidden="true">알림</span>
+    </button>
     <button type="button" id="shareBtn" class="share-btn" aria-label="더보기">
       <span id="shareBtnLabel" class="btn-text">공유 안 함</span>
       <span class="btn-icon" aria-hidden="true">⋯</span>
     </button>
+  </div>
+
+  <div class="share-panel" id="todayAlarmPanel" hidden>
+    <p class="all-schedule-title">오늘 일정</p>
+    <ul id="todayAlarmList" class="all-schedule-list"></ul>
+    <p id="todayAlarmEmpty" class="all-schedule-empty" hidden>오늘 등록된 일정이 없습니다.</p>
   </div>
 
   <div class="share-panel" id="sharePanel" hidden>
