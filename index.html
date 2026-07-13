@@ -23,9 +23,16 @@
   </header>
 
   <div class="share-row">
-    <button type="button" id="todayBtn" class="today-btn" aria-label="오늘로 이동">오늘</button>
-    <button type="button" id="shareBtn" class="share-btn">
-      <span id="shareBtnLabel">공유 안 함</span>
+    <div class="bottom-bar-spacer" aria-hidden="true"></div>
+    <button type="button" id="todayBtn" class="today-btn" aria-label="오늘로 이동">
+      <span class="btn-text">오늘</span>
+      <span class="btn-icon" aria-hidden="true">⌂</span>
+      <span class="btn-icon-label" aria-hidden="true">홈</span>
+    </button>
+    <div class="bottom-bar-spacer" aria-hidden="true"></div>
+    <button type="button" id="shareBtn" class="share-btn" aria-label="더보기">
+      <span id="shareBtnLabel" class="btn-text">공유 안 함</span>
+      <span class="btn-icon" aria-hidden="true">⋯</span>
     </button>
   </div>
 
