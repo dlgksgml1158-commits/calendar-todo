@@ -11,7 +11,8 @@
   --color-rose: #f43f5e;
   --color-rose-light: #ffe4e9;
   --color-green: #008300;
-  --color-today: #22c55e;
+  --color-today: #7bc99a;
+  --color-bottom-bar: #dcdee7;
   --color-sun: #f43f5e;
   --color-sat: #3b82f6;
   --shadow-sm: 0 1px 2px rgba(28, 29, 43, 0.06);
@@ -36,7 +37,8 @@
     --color-indigo-light: #262347;
     --color-rose-light: #401d29;
     --color-green: #17a317;
-    --color-today: #4ade80;
+    --color-today: #6bb98a;
+    --color-bottom-bar: #262838;
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
     --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.55);
@@ -924,7 +926,7 @@ body.no-scroll {
     gap: 0;
     margin: 6px 0 0;
     padding-top: 0;
-    background: var(--color-surface);
+    background: var(--color-bottom-bar);
     border-top: 1px solid var(--color-border);
   }
 
