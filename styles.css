@@ -868,13 +868,14 @@ body.no-scroll {
     height: 100vh;
     height: 100dvh;
     margin: 0;
-    padding: max(12px, env(safe-area-inset-top)) 8px max(10px, env(safe-area-inset-bottom));
+    padding: max(12px, env(safe-area-inset-top)) 0 max(10px, env(safe-area-inset-bottom));
     display: flex;
     flex-direction: column;
   }
 
   .calendar-header {
     margin-bottom: 12px;
+    padding: 0 12px;
     flex-shrink: 0;
   }
 
@@ -885,6 +886,7 @@ body.no-scroll {
 
   .weekday-row {
     flex-shrink: 0;
+    padding: 0 4px;
   }
 
   .calendar-grid {
@@ -892,9 +894,20 @@ body.no-scroll {
     min-height: 0;
     grid-auto-rows: unset;
     grid-template-rows: repeat(6, 1fr);
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 4px 0 0;
+    gap: 0;
   }
 
   .cell {
     min-height: 64px;
+    border-radius: 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .cell:not(:nth-child(7n)) {
+    border-right: 1px solid var(--color-border);
   }
 }
