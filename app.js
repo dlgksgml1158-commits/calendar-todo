@@ -220,6 +220,10 @@
   var todayAlarmPanel = document.getElementById("todayAlarmPanel");
   var todayAlarmList = document.getElementById("todayAlarmList");
   var todayAlarmEmpty = document.getElementById("todayAlarmEmpty");
+  var fortuneBtn = document.getElementById("fortuneBtn");
+  var fortunePanel = document.getElementById("fortunePanel");
+  var fortuneDateText = document.getElementById("fortuneDateText");
+  var fortuneText = document.getElementById("fortuneText");
   var shareStatusText = document.getElementById("shareStatusText");
   var shareSoloView = document.getElementById("shareSoloView");
   var shareActiveView = document.getElementById("shareActiveView");
@@ -282,6 +286,7 @@
 
   shareBtn.addEventListener("click", function () {
     todayAlarmPanel.hidden = true;
+    fortunePanel.hidden = true;
     sharePanel.hidden = !sharePanel.hidden;
   });
 
@@ -344,10 +349,75 @@
 
   alarmBtn.addEventListener("click", function () {
     sharePanel.hidden = true;
+    fortunePanel.hidden = true;
     todayAlarmPanel.hidden = !todayAlarmPanel.hidden;
     if (!todayAlarmPanel.hidden) {
       var items = renderTodayAlarmList();
       notifyTodaySchedule(items);
+    }
+  });
+
+  var FORTUNES = [
+    "오늘은 뜻밖의 좋은 소식이 들려올 수 있어요.",
+    "차분히 임하면 좋은 결과가 따르는 하루예요.",
+    "평소 미뤄뒀던 일을 시작하기 좋은 날이에요.",
+    "주변 사람과의 대화에서 힌트를 얻을 수 있어요.",
+    "작은 행운이 예상치 못한 곳에서 찾아와요.",
+    "돈 관리에 조금 더 신경 쓰면 좋은 하루예요.",
+    "새로운 인연이 생길 수 있는 날이에요.",
+    "건강 관리에 신경 써보면 좋겠어요.",
+    "고민하던 일에 대한 답을 찾게 될 거예요.",
+    "여유를 갖고 하루를 보내면 마음이 편해져요.",
+    "오늘은 평소보다 집중이 잘 되는 날이에요.",
+    "작은 실수에 너무 연연하지 않아도 괜찮아요.",
+    "주변의 칭찬이 큰 힘이 되는 하루예요.",
+    "계획했던 일이 순조롭게 풀릴 거예요.",
+    "예상치 못한 만남이 즐거움을 줄 수 있어요.",
+    "오늘은 나 자신을 위한 시간을 가져보세요.",
+    "동료나 친구에게 먼저 연락해보면 좋을 거예요.",
+    "잠깐의 휴식이 큰 활력을 줄 수 있어요.",
+    "결정을 내려야 할 일에 좋은 직감이 따라요.",
+    "오늘 하루는 여유 있게 흘러갈 거예요.",
+    "평소 안 하던 일에 도전해보기 좋은 날이에요.",
+    "가족과의 시간이 특별하게 느껴질 수 있어요.",
+    "긍정적인 마음가짐이 좋은 하루를 만들어줘요.",
+    "작은 목표를 이루며 뿌듯함을 느낄 거예요.",
+  ];
+
+  function getDeviceSeed() {
+    var key = "ctd_device_seed";
+    var seed = localStorage.getItem(key);
+    if (!seed) {
+      seed = Math.random().toString(36).slice(2) + Date.now().toString(36);
+      localStorage.setItem(key, seed);
+    }
+    return seed;
+  }
+
+  function hashString(str) {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+      hash = (hash << 5) - hash + str.charCodeAt(i);
+      hash |= 0;
+    }
+    return Math.abs(hash);
+  }
+
+  function getTodayFortune() {
+    var todayStr = formatDateObj(new Date());
+    var seed = getDeviceSeed();
+    var index = hashString(todayStr + seed) % FORTUNES.length;
+    return FORTUNES[index];
+  }
+
+  fortuneBtn.addEventListener("click", function () {
+    sharePanel.hidden = true;
+    todayAlarmPanel.hidden = true;
+    fortunePanel.hidden = !fortunePanel.hidden;
+    if (!fortunePanel.hidden) {
+      var d = new Date();
+      fortuneDateText.textContent = (d.getMonth() + 1) + "월 " + d.getDate() + "일의 운세";
+      fortuneText.textContent = getTodayFortune();
     }
   });
 

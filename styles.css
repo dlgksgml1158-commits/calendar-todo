@@ -152,7 +152,8 @@ body.no-scroll {
 .bottom-bar-spacer,
 .btn-icon,
 .btn-icon-label,
-.alarm-btn {
+.alarm-btn,
+.fortune-btn {
   display: none;
 }
 
@@ -230,6 +231,17 @@ body.no-scroll {
   color: var(--color-text-muted);
   text-align: center;
   margin: 0 0 10px;
+}
+
+.fortune-text {
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-indigo-light);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin: 0;
 }
 
 .share-action-btn {

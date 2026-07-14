@@ -23,7 +23,13 @@
   </header>
 
   <div class="share-row">
-    <div class="bottom-bar-spacer" aria-hidden="true"></div>
+    <button type="button" id="fortuneBtn" class="today-btn fortune-btn" aria-label="오늘의 운세">
+      <span class="btn-text">운세</span>
+      <svg class="btn-icon" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.1 2.1M15.6 15.6l2.1 2.1M17.7 6.3l-2.1 2.1M8.4 15.6l-2.1 2.1" />
+      </svg>
+      <span class="btn-icon-label" aria-hidden="true">운세</span>
+    </button>
     <button type="button" id="todayBtn" class="today-btn" aria-label="오늘로 이동">
       <span class="btn-text">오늘</span>
       <svg class="btn-icon" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -48,6 +54,12 @@
         <circle cx="19" cy="12" r="1.6" />
       </svg>
     </button>
+  </div>
+
+  <div class="share-panel" id="fortunePanel" hidden>
+    <p class="all-schedule-title">오늘의 운세</p>
+    <p id="fortuneDateText" class="share-status"></p>
+    <p id="fortuneText" class="fortune-text"></p>
   </div>
 
   <div class="share-panel" id="todayAlarmPanel" hidden>
