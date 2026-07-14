@@ -1156,6 +1156,12 @@
     "serviceWorker" in navigator &&
     (location.protocol === "https:" || location.hostname === "localhost")
   ) {
+    var reloadedForUpdate = false;
+    navigator.serviceWorker.addEventListener("controllerchange", function () {
+      if (reloadedForUpdate) return;
+      reloadedForUpdate = true;
+      window.location.reload();
+    });
     window.addEventListener("load", function () {
       navigator.serviceWorker.register("sw.js").catch(function () {});
     });
